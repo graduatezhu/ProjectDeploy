@@ -10,7 +10,7 @@ $config = array(
      * 2:REWRITE模式(PATHINFO模式基础上隐藏index.php)
      * 3:兼容模式(普通模式和PATHINFO模式, 可以支持任何的运行环境, 如果你的环境不支持PATHINFO 请设置为3)
      */
-    'URL_MODEL'         => 2, // 如果你的环境不支持PATHINFO 请设置为3
+    'URL_MODEL'         => 2, // 如果环境不支持PATHINFO 请设置为3
     
     'URL_CASE_INSENSITIVE' =>true, //URL忽略大小写
 );
