@@ -20,17 +20,15 @@ define('APP_DEBUG',True);
 // 定义应用目录
 define('APP_PATH','./Application/');
 
-/**
- * 缓存目录设置
- * 此目录必须可写，建议移动到非WEB目录
- */
+
+//定义缓存目录
 define ( 'RUNTIME_PATH', './Runtime/' );
 
-//定义公共模块的目录，放到应用目录外
+//定义公共模块的目录
 define('COMMON_PATH','./Common/');
 
-//追加 一个新的分组
-// define('BIND_MODULE','Admin');
+//追加新分组
+//define('BIND_MODULE','Admin');
 //define('BIND_MODULE','APIes');
 
 
