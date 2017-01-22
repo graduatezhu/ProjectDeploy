@@ -2,7 +2,7 @@
 
 class DemoController extends CommonController {
     
-    /*声明数据库Model层对象*/
+    /*声明数据表Model对象*/
     public $tblStudent;
     public $tblGrade;
     
