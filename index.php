@@ -21,18 +21,15 @@ define('APP_DEBUG',True);
 define('APP_PATH','./Application/');
 
 
-//定义缓存目录
+//定义缓存目录,放到应用目录外层
 define ( 'RUNTIME_PATH', './Runtime/' );
 
-//定义公共模块的目录
+//定义公共模块的目录,放到应用目录外层
 define('COMMON_PATH','./Common/');
 
 //追加新分组
 //define('BIND_MODULE','Admin');
 //define('BIND_MODULE','APIes');
-
-
-
 
 
 

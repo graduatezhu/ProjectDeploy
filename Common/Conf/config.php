@@ -2,7 +2,7 @@
 $config = array(
 	//'配置项'=>'配置值'
 	
-    'DEFAULT_MODULE'     => 'Home', // 默认模块
+    'DEFAULT_MODULE'     => 'Admin', // 默认模块
     'APP_USE_NAMESPACE' => false, // 应用类库不再使用命名空间
     'URL_CASE_INSENSITIVE' =>true, // URL忽略大小写
     
@@ -18,6 +18,6 @@ $config = array(
 );
 
 //数据库配置
-$dbConfig = include_once ROOT . '/Common/Conf/dbconfig.php';
+$dbConfig = require_once './Common/Conf/dbconfig.php';
 
 return array_merge($config, $dbConfig);
