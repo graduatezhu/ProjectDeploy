@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @ClassName: DemoController
+ * @Description: todo
+ * @Company: EDog
+ * @author ZXD
+ * @date 2017年1月23日上午11:08:09
+ */
 class DemoController extends CommonController {
     
     /*声明数据表Model对象*/
@@ -19,6 +25,13 @@ class DemoController extends CommonController {
 		
 	}
 	
+	/**
+	 * @Title: DEMO
+	 * @Description: 返回测试数据
+	 * @param 参数
+	 * @return JSON
+	 * @throws
+	 */
     public function index() {
         $return['success']=true; // 接口通信成功标志
         
