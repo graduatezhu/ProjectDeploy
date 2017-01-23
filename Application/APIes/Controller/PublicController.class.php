@@ -15,7 +15,7 @@ class PublicController extends CommonController {
 	public function chkPublicToken() {
 		if($_SERVER['SERVER_ADDR'] == '127.0.0.1') return true;//本机不验证
 
-		if( I('post.token') != md5(md5('e_charge').C('TOKEN_ALL').md5('edog')) ){
+		if( I('get.token') != md5(md5('e_charge').C('TOKEN_ALL').md5('edog')) ){
 			$return['status'] = -1;
 			$return['message'] = 'Public Token Fault';
 			echo json_encode($return,JSON_UNESCAPED_UNICODE);

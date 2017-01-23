@@ -9,8 +9,7 @@
 class DemoController extends CommonController {
     
     /*声明数据表Model对象*/
-    public $tblStudent;
-    public $tblGrade;
+    public $tblChargTmp;
     
     /*初始化*/
 	public function _initialize() {
@@ -20,8 +19,7 @@ class DemoController extends CommonController {
 		A('Public')->chkPublicToken(); // 校验APP访问接口时传入的TOKEN
 		
 		/*实例化模型对象*/
-		$this->tblStudent=D('Student');
-		$this->tblGrade=D('grade');
+		$this->tblChargTmp=D('ChargeTmp');
 		
 	}
 	
@@ -41,13 +39,12 @@ class DemoController extends CommonController {
         $limit = ($page-1)*$pageSize.','.$pageSize;
         
         /*查询数据*/
-        $map['id']=2;
-        $field='id,name';
-        $reStu=$this->tblStudent->selData($map,$limit,$field);  
-        $reGrade=$this->tblGrade->selData($map,'',''); //参数列表中若有空白项，书写空串''填补空位
+        $map['id']=1;
+        $field='id,pile_no,site_no';
+        $re=$this->tblChargTmp->selData($map,$limit,$field);
         
         /*返回数据*/
-        $return['info']=$reStu;
+        $return['info']=$re;
         $return['data']='this is the demo project';
         echo json_encode($return,JSON_UNESCAPED_UNICODE);
     }

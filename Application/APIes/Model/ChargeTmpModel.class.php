@@ -1,6 +1,6 @@
 <?php
 //评论表
-class StudentModel extends CommonModel{
+class ChargeTmpModel extends CommonModel{
     // protected $tableName='e_student';
 }
     
