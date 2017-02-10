@@ -176,3 +176,67 @@ function pile_control($code, $gun, $type = '1',$userID) {
 
     return $return;
 }
+
+
+/**
+ * @Title: 修改电价
+ * @access public
+ * @param string $code 二维码
+ * @param string $price 新电价
+ * @return array 控制结果
+ * @author ZXD
+ */
+function modify_price($code,$price) {
+    settype($code,'string');
+
+    // 截取18位电站编号
+    $stationNO=substr($code,0,18);
+
+    // 截取3位电桩编号并根据帧规则拼接字符A
+    $pileNO = substr($code,18,3).'A';
+
+    // 电价扩大100倍为正整数，高位补0，补齐8位
+    $priceHex=strtoupper(dechex($price*100));
+    $priceHex=str_repeat('0', 8-strlen($priceHex)).$priceHex;
+
+    // 组装待校验帧,'xx'为待校验位
+    $frame='85'.'0015'.'15'.$stationNO.$pileNO.$priceHex.'xx'.'7E';
+
+    // 生成校验码并替换校验码位'xx'
+    $code=generate_code($frame);
+    $frame=substr_replace($frame, $code, -4,2);
+    // return $frame;
+    /*发送命令帧*/
+    // 生成数组
+    $j=0;
+    for($i=0;$i<strlen($frame);$i+=2){
+        $frameArray[$j]=substr($frame, $i,2);
+        $j++;
+    }
+     
+    // 发送
+    $receiveFrame=send_frame($frameArray);
+
+    // 校验服务端返回的身份验证帧应答
+    $boolResult=verifiy_code($receiveFrame);
+
+    if ($boolResult) {
+        if(substr($receiveFrame, -8,2)=='00'){
+            $return['status']='0';
+            $return['message']='电价修改成功';
+        }else {
+            if(substr($receiveFrame, -6,2)=='01'){
+                $return['status']='-1';
+                $return['frameFromServer']=$receiveFrame;
+                $return['message']='已插枪，无法修改电价';
+            }
+            
+        }
+
+    }else{
+        $return['status']='-9';
+        $return['message']='应答帧校验错误';
+    }
+
+    return $return;
+}
