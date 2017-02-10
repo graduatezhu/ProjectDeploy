@@ -126,52 +126,65 @@ function send_frame($commandArray){
  */
 function pile_control($code, $gun, $type = '1',$userID) {
 
+    // 用于返回信息输出
+    $switch=($type=='0')?'开启':'关闭';
+
     settype($code,'string');
 
-    //截取18位电站编号
+    // 截取18位电站编号
     $stationNO=substr($code,0,18);//从下标0开始取18位
 
-    //截取3位电桩编号并根据帧规则拼接字符A
+    // 截取3位电桩编号并根据帧规则拼接字符A
     $pileNO = substr($code,18,3).'A';
 
-    //补齐2位枪号
+    // 补齐2位枪号
     $gun=str_repeat('0',(2-strlen($gun))).$gun;
 
-    //补齐24位用户身份编号，其中'!'ascii码为16
+    // 补齐24位用户身份编号，其中'!'ascii码为16
     $userIdHex='';
     for($i=0;$i<strlen($userID);$i++){
         $userIdHex.=dechex(ord(substr($userID, $i)));
     }
     $userIdHex.=str_repeat('21',24-(strlen($userIdHex)/2));
 
-    //补齐2位控制命令
+    // 补齐2位控制命令
     $type=str_repeat('0',(2-strlen($type))).$type;
 
-    //组装待校验帧,'xx'为待校验位
+    // 组装待校验帧,'xx'为待校验位
     $frame='85'.'002B'.'13'.$stationNO.$pileNO.$gun.$userIdHex.$type.'xx'.'7E';
 
-    //生成校验码并替换校验码位'xx'
+    // 生成校验码并替换校验码位'xx'
     $code=generate_code($frame);
-
     $frame=substr_replace($frame, $code, -4,2);
     // return $frame;
 
     /*发送命令帧*/
-    //生成数组
+    // 生成数组
     $j=0;
     for($i=0;$i<strlen($frame);$i+=2){
         $frameArray[$j]=substr($frame, $i,2);
         $j++;
     }
-    //发送
+    // 发送
     $receiveFrame=send_frame($frameArray);
     // return $receiveFrame;
 
-    //校验服务端返回的身份验证帧应答
+    // 校验服务端返回的身份验证帧应答
     $boolResult=verifiy_code($receiveFrame);
+
     if ($boolResult) {
-        $return['status']=1;
-        $return['message']='电桩启停成功';
+        if(substr($receiveFrame, -6,2)=='00'){
+            $return['status']='0';
+            $return['message']='电桩'.$switch.'成功';
+        }else {
+            $return['status']='-1';
+            $return['frameFromServer']=$receiveFrame;
+            $return['message']='电桩'.$switch.'失败';
+        }
+
+    }else{
+        $return['status']='-9';
+        $return['message']='应答帧校验错误';
     }
 
     return $return;
