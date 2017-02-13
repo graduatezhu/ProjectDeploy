@@ -47,8 +47,8 @@ class PilesChargingController extends CommonController {
 	        $return['status'] = '-1';
 	        $return['code']='-888';
 	        $return['msg'] = '传参不完整';
-	    }else{
 	        
+	    }else{
 	        $cmdRTNArray=pile_control($QRCode,$gunCode,$cmdType,$userID); // 返回电桩启停控制结果的状态数组
 	        switch ($cmdRTNArray['status']) {
 	            case '0':
