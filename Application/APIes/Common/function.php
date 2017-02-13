@@ -18,6 +18,20 @@ function timestap_to_array($startdate,$enddate){
 
 
 /**
+ * @Title: 判断变量是否为空
+ * @param mixed $var 变量
+ * @return true/false
+ * @author lxk
+ */
+function is_empty($var) {
+    if (!isset($var) || is_null($var) || (trim($var) == "" && !is_bool($var)) || (is_bool($var) && $var === false) || (is_array($var) && empty($var))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
  * @Title: 生成帧校验码
  * @access public
  * @param int $frame 帧数据
@@ -89,14 +103,18 @@ function send_frame($commandArray){
         $receiveAuthStr = "";
         $receiveAuthStr = socket_read($socket, 1024, PHP_BINARY_READ);  // 采用二进制方式接收数据
         $receiveAuthStrHex = bin2hex($receiveAuthStr);  // 将2进制数据转换成16进制
-        // return '身份校验帧：'.$receiveAuthStrHex;
+        // return '身份校验帧：'.$receiveAuthStrHex; // for debug
+        
         // 校验服务端返回的身份验证帧应答
         $boolResult=verifiy_code(strtoupper($receiveAuthStrHex));
         // return '身份校验结果：'.$boolResult;
 
         if (!$boolResult) {
-            return;
+            $return['status'] ='-1';
+            $return['msg']='APP后台身份校验错误';
+
         }else{
+            // 命令帧
             $commandFrame='';
             for ($j = 0; $j < count($commandArray); $j++) {
                 $commandFrame.=chr(hexdec($commandArray[$j]));
@@ -107,9 +125,13 @@ function send_frame($commandArray){
             $receiveCommandStr = "";
             $receiveCommandStr = socket_read($socket, 1024, PHP_BINARY_READ);  // 采用二进制方式接收数据
             $receiveCommandStrHex = bin2hex($receiveCommandStr);  // 将2进制数据转换成16进制
+            
+            $return['status']='0';
+            $return['msg']='APP后台身份校验成功';
+            $return['info']=$receiveCommandStrHex;
 
         }
-        return $receiveCommandStrHex;
+        return $return;
     }
     socket_close($socket);  // 关闭Socket
 }
@@ -124,7 +146,7 @@ function send_frame($commandArray){
  * @return array 控制结果
  * @author ZXD
  */
-function pile_control($code, $gun, $type = '1',$userID) {
+function pile_control($code, $gun, $type,$userID) {
 
     // 用于返回信息输出
     $switch=($type=='0')?'开启':'关闭';
@@ -168,23 +190,33 @@ function pile_control($code, $gun, $type = '1',$userID) {
     // 发送
     $receiveFrame=send_frame($frameArray);
     // return $receiveFrame;
-
-    // 校验服务端返回的身份验证帧应答
-    $boolResult=verifiy_code($receiveFrame);
-
-    if ($boolResult) {
-        if(substr($receiveFrame, -6,2)=='00'){
-            $return['status']='0';
-            $return['message']='电桩'.$switch.'成功';
-        }else {
-            $return['status']='-1';
-            $return['frameFromServer']=$receiveFrame;
-            $return['message']='电桩'.$switch.'失败';
+    
+    if($receiveFrame['status']=='0'){
+        /*正常返回命令应答帧*/
+        
+        // 校验服务端返回的命令帧应答
+        $boolResult=verifiy_code($receiveFrame['info']);
+        
+        if ($boolResult) {
+            if(substr($receiveFrame, -6,2)=='00'){
+                $return['status']='0';
+                $return['msg']='电桩'.$switch.'成功';
+            }else {
+                $return['status']='-1';
+                //$return['frameFromServer']=$receiveFrame; // for dubug
+                $return['msg']='电桩'.$switch.'失败';
+            }
+        
+        }else{
+            $return['status']='-2';
+            $return['msg']='命令应答帧校验错误';
         }
-
+        
     }else{
-        $return['status']='-9';
-        $return['message']='应答帧校验错误';
+        /*APP后台身份验证错误*/
+        $return['status']='-3';
+        $return['msg']='APP后台身份校验错误';
+        
     }
 
     return $return;

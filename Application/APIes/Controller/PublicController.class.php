@@ -17,6 +17,7 @@ class PublicController extends CommonController {
 
 		if( I('get.token') != md5(md5('e_charge').C('TOKEN_ALL').md5('edog')) ){
 			$return['status'] = -1;
+			$return['code']='-999';
 			$return['message'] = 'Public Token Fault';
 			echo json_encode($return,JSON_UNESCAPED_UNICODE);
 			die();
