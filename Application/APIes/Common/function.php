@@ -119,7 +119,7 @@ function send_frame($commandArray){
             for ($j = 0; $j < count($commandArray); $j++) {
                 $commandFrame.=chr(hexdec($commandArray[$j]));
             }
-            // return '发送的命令帧：'.bin2hex($commandFrame);
+            // return '发送的命令帧：'.bin2hex($commandFrame); // for debug
             socket_write($socket, $commandFrame);//发送命令帧
 
             $receiveCommandStr = "";
@@ -127,8 +127,8 @@ function send_frame($commandArray){
             $receiveCommandStrHex = bin2hex($receiveCommandStr);  // 将2进制数据转换成16进制
             
             $return['status']='0';
-            $return['msg']='APP后台身份校验成功';
-            $return['info']=$receiveCommandStrHex;
+            $return['msg']='控制命令应答返回成功';
+            $return['info']=$receiveCommandStrHex; // 返回应答帧
 
         }
         return $return;
@@ -251,6 +251,7 @@ function modify_price($code,$price) {
     $code=generate_code($frame);
     $frame=substr_replace($frame, $code, -4,2);
     // return $frame;
+    
     /*发送命令帧*/
     // 生成数组
     $j=0;
@@ -261,26 +262,31 @@ function modify_price($code,$price) {
      
     // 发送
     $receiveFrame=send_frame($frameArray);
-
-    // 校验服务端返回的身份验证帧应答
-    $boolResult=verifiy_code($receiveFrame);
-
-    if ($boolResult) {
-        if(substr($receiveFrame, -8,2)=='00'){
-            $return['status']='0';
-            $return['message']='电价修改成功';
-        }else {
-            if(substr($receiveFrame, -6,2)=='01'){
-                $return['status']='-1';
-                $return['frameFromServer']=$receiveFrame;
-                $return['message']='已插枪，无法修改电价';
+    
+    /*正常返回命令应答帧*/
+    if($receiveFrame['status']=='0'){
+        
+        $boolResult=verifiy_code($receiveFrame['info']); // 校验服务端返回的应答帧
+        
+        if ($boolResult) {
+            if(substr($receiveFrame, -8,2)=='00'){
+                $return['status']='0';
+                $return['msg']='电价修改成功';
+            }else {
+                if(substr($receiveFrame, -6,2)=='01'){
+                    $return['status']='-1';
+                    //$return['frameFromServer']=$receiveFrame; // for debug
+                    $return['msg']='已插枪，无法修改电价';
+                }
             }
-            
+        }else{
+            $return['status']='-2';
+            $return['msg']='应答帧校验错误';
         }
-
     }else{
-        $return['status']='-9';
-        $return['message']='应答帧校验错误';
+        /*APP后台身份验证错误*/
+        $return['status']='-3';
+        $return['msg']='APP后台身份校验错误';
     }
 
     return $return;

@@ -9,7 +9,7 @@
 class PilesChargingController extends CommonController {
     
     /*声明数据表Model对象*/
-    public $tblChargTmp;
+//     public $tblChargTmp;
     
     /*初始化*/
 	public function _initialize() {
@@ -19,7 +19,7 @@ class PilesChargingController extends CommonController {
 		A('Public')->chkPublicToken(); // 校验APP访问接口时传入的TOKEN
 		
 		/*实例化模型对象*/
-		$this->tblChargTmp=D('ChargeTmp');
+// 		$this->tblChargTmp=D('ChargeTmp');
 		
 	}
 	
@@ -54,22 +54,22 @@ class PilesChargingController extends CommonController {
 	            case '0':
 	                $return['status'] = '0';
 	                $return['msg']=$cmdRTNArray['msg']; // 电桩启停成功
-	            break;
+	                break;
 	            case '-1':
 	                $return['status'] = '-1';
-	                $return['code']='-100001';
+	                $return['code']='10101';
 	                $return['msg']=$cmdRTNArray['msg']; // 电桩启停失败;
-	            break;
+	                break;
 	            case '-2':
 	                $return['status'] = '-1';
-	                $return['code']='-100002';
+	                $return['code']='10102';
 	                $return['msg']=$cmdRTNArray['msg']; // 命令应答帧校验错误
-	            break;
+	                break;
 	            case '-3':
 	                $return['status'] = '-1';
-	                $return['code']='-100003';
+	                $return['code']='10103';
 	                $return['msg']=$cmdRTNArray['msg']; // APP后台身份校验错误
-	            break;
+	                break;
 	        }
 	        
 	    }
