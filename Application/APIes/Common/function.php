@@ -353,3 +353,81 @@ function reset_pile($QRcode){
 
     return $return;
 }
+
+
+/**
+ * @Title: 锁定/解锁电桩
+ * @access public
+ * @param string $QRcode 二维码
+ * @param string $gun 枪号
+ * @param string $type 命令类型
+ * @return array 控制结果
+ * @author ZXD
+ */
+function lock_pile($QRcode, $gun, $type) {
+    // 用于返回信息输出
+    $switch=($type=='0')?'解锁':'锁定';
+
+    settype($QRcode,'string');
+
+    // 截取18位电站编号
+    $stationNO=substr($QRcode,0,18);//从下标0开始取18位
+
+    // 截取3位电桩编号并根据帧规则拼接字符A
+    $pileNO = substr($QRcode,18,3).'A';
+
+    // 补齐2位枪号
+    $gun=str_repeat('0',(2-strlen($gun))).$gun;
+
+    // 补齐2位控制命令
+    $type=str_repeat('0',(2-strlen($type))).$type;
+
+    // 组装待校验帧,'xx'为待校验位
+    $frame='85'.'0013'.'14'.$stationNO.$pileNO.$gun.$type.'xx'.'7E';
+
+    // 生成校验码并替换校验码位'xx'
+    $code=generate_code($frame);
+    $frame=substr_replace($frame, $code, -4,2);
+
+    /*发送命令帧*/
+    // 生成数组
+    $j=0;
+    for($i=0;$i<strlen($frame);$i+=2){
+        $frameArray[$j]=substr($frame, $i,2);
+        $j++;
+    }
+    // 发送
+    $receiveFrame=send_frame($frameArray);
+    // return $receiveFrame;
+
+    if($receiveFrame['status']=='0'){
+        /*正常返回命令应答帧*/
+
+        // 校验服务端返回的命令帧应答
+        $boolResult=verifiy_code($receiveFrame['info']);
+
+        if ($boolResult) {
+            if(substr($receiveFrame, -6,2)=='00'){
+                $return['status']='0';
+                $return['msg']='电桩'.$switch.'成功';
+            }else {
+                $return['status']='-1';
+                //$return['frameFromServer']=$receiveFrame; // for dubug
+                $return['msg']='电桩'.$switch.'失败';
+            }
+
+        }else{
+            $return['status']='-2';
+            $return['msg']='命令应答帧校验错误';
+        }
+
+    }else{
+        /*APP后台身份验证错误*/
+        $return['status']='-3';
+        $return['msg']='APP后台身份校验错误';
+
+    }
+
+    return $return;
+
+}
