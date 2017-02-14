@@ -1,6 +1,6 @@
 <?php
 /**
- * @ClassName: PriceModify
+ * @ClassName: PilesPriceModify
  * @Description: 修改电价接口
  * @Company: EDog
  * @author ZXD

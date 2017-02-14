@@ -1,6 +1,6 @@
 <?php
 /**
- * @ClassName: PilesCharging
+ * @ClassName: PilesReset
  * @Description: 电桩充电接口
  * @Company: EDog
  * @author ZXD
@@ -35,7 +35,7 @@ class PilesResetController extends CommonController {
 	    
 	    $return['success'] = true;
 	    
-	    $QRCode = I('post. QRCode','','trim'); // 电桩二维码编号
+	    $QRCode = I('post.QRCode','','trim'); // 电桩二维码编号
 	    
 	    if (is_empty($QRCode)){
 	        $return['status'] = '-1';

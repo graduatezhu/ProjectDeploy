@@ -1,6 +1,6 @@
 <?php
 /**
- * @ClassName: PilesCharging
+ * @ClassName: PilesSwitch
  * @Description: 电桩充电接口
  * @Company: EDog
  * @author ZXD
