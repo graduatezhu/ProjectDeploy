@@ -47,7 +47,7 @@ class PilesLockController extends CommonController {
 	        $return['msg'] = '传参不完整';
 	        
 	    }else{
-	        $cmdRTNArray=switch_pile($QRCode,$gunCode,$cmdType); // 返回电桩锁定/解锁控制结果的状态数组
+	        $cmdRTNArray=lock_pile($QRCode,$gunCode,$cmdType); // 返回电桩锁定/解锁控制结果的状态数组
 	        switch ($cmdRTNArray['status']) {
 	            case '0':
 	                $return['status'] = '0';
