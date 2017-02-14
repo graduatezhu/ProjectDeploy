@@ -162,7 +162,7 @@ function switch_pile($QRcode, $gun, $type,$userID) {
     // 补齐2位枪号
     $gun=str_repeat('0',(2-strlen($gun))).$gun;
 
-    // 补齐24位用户身份编号，其中'!'ascii码为16
+    // 补齐24位用户身份编号，其中'!'ascii码为21
     $userIdHex='';
     for($i=0;$i<strlen($userID);$i++){
         $userIdHex.=dechex(ord(substr($userID, $i)));
