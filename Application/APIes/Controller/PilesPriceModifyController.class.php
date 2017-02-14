@@ -6,7 +6,7 @@
  * @author ZXD
  * @date 2017年2月13日上午11:40:09
  */
-class PriceModifyController extends CommonController {
+class PilesPriceModifyController extends CommonController {
     
     /*声明数据表Model对象*/
 //     public $tblChargTmp;
@@ -37,7 +37,7 @@ class PriceModifyController extends CommonController {
 	    $QRCode=I('post.QRCode','','trim');
 	    $price=I('post.price','','trim');
 	    
-	    $cmdRTNArray=modify_price($QRCode,$price); // 返回命令结果的状态数组
+	    $cmdRTNArray=modify_pile_price($QRCode,$price); // 返回命令结果的状态数组
 	    
 	    switch($cmdRTNArray['status']){
 	        case '0':

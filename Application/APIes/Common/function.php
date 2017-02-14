@@ -139,25 +139,25 @@ function send_frame($commandArray){
 /**
  * @Title: 电桩启停
  * @access public
- * @param string $code 二维码
+ * @param string $QRcode 二维码
  * @param string $gun 枪号
  * @param string $type 开启/关闭
  * @param string $userID 用户ID
  * @return array 控制结果
  * @author ZXD
  */
-function pile_control($code, $gun, $type,$userID) {
+function switch_pile($QRcode, $gun, $type,$userID) {
 
     // 用于返回信息输出
     $switch=($type=='0')?'开启':'关闭';
 
-    settype($code,'string');
+    settype($QRcode,'string');
 
     // 截取18位电站编号
-    $stationNO=substr($code,0,18);//从下标0开始取18位
+    $stationNO=substr($QRcode,0,18);//从下标0开始取18位
 
     // 截取3位电桩编号并根据帧规则拼接字符A
-    $pileNO = substr($code,18,3).'A';
+    $pileNO = substr($QRcode,18,3).'A';
 
     // 补齐2位枪号
     $gun=str_repeat('0',(2-strlen($gun))).$gun;
@@ -226,19 +226,19 @@ function pile_control($code, $gun, $type,$userID) {
 /**
  * @Title: 修改电价
  * @access public
- * @param string $code 二维码
+ * @param string $QRcode 二维码
  * @param string $price 新电价
  * @return array 控制结果
  * @author ZXD
  */
-function modify_price($code,$price) {
-    settype($code,'string');
+function modify_pile_price($QRcode,$price) {
+    settype($QRcode,'string');
 
     // 截取18位电站编号
-    $stationNO=substr($code,0,18);
+    $stationNO=substr($QRcode,0,18);
 
     // 截取3位电桩编号并根据帧规则拼接字符A
-    $pileNO = substr($code,18,3).'A';
+    $pileNO = substr($QRcode,18,3).'A';
 
     // 电价扩大100倍为正整数，高位补0，补齐8位
     $priceHex=strtoupper(dechex($price*100));
@@ -278,6 +278,68 @@ function modify_price($code,$price) {
                     //$return['frameFromServer']=$receiveFrame; // for debug
                     $return['msg']='已插枪，无法修改电价';
                 }
+            }
+        }else{
+            $return['status']='-2';
+            $return['msg']='应答帧校验错误';
+        }
+    }else{
+        /*APP后台身份验证错误*/
+        $return['status']='-3';
+        $return['msg']='APP后台身份校验错误';
+    }
+
+    return $return;
+}
+
+/**
+ * @Title: 重启电桩
+ * @access public
+ * @param string $QRcode 二维码
+ * @return array 控制结果
+ * @author ZXD
+ */
+function reset_pile($QRcode){
+
+    settype($QRcode, 'string');
+
+    // 截取18位电站编号
+    $stationNO=substr($QRcode,0,18);
+
+    // 截取3位电桩编号并根据帧规则拼接字符A
+    $pileNO = substr($QRcode,18,3).'A';
+
+    // 组装待校验帧,'xx'为待校验位
+    $frame='85'.'0012'.'16'.$stationNO.$pileNO.'0'.'xx'.'7E';
+
+    // 生成校验码并替换校验码位'xx'
+    $code=generate_code($frame);
+    $frame=substr_replace($frame, $code, -4,2);
+
+    /*发送命令帧*/
+    // 生成数组
+    $j=0;
+    for($i=0;$i<strlen($frame);$i+=2){
+        $frameArray[$j]=substr($frame, $i,2);
+        $j++;
+    }
+     
+    // 发送
+    $receiveFrame=send_frame($frameArray);
+
+    /*正常返回命令应答帧*/
+    if($receiveFrame['status']=='0'){
+
+        $boolResult=verifiy_code($receiveFrame['info']); // 校验服务端返回的应答帧
+
+        if ($boolResult) {
+            if(substr($receiveFrame, -5,1)=='0'){
+                $return['status']='0';
+                $return['msg']='电桩重启成功';
+            }else {
+                $return['status']='-1';
+                //$return['frameFromServer']=$receiveFrame; // for debug
+                $return['msg']='电桩重启失败';
             }
         }else{
             $return['status']='-2';

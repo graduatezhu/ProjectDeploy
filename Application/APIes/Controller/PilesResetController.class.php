@@ -6,7 +6,7 @@
  * @author ZXD
  * @date 2017年2月13日上午11:08:09
  */
-class PilesChargingController extends CommonController {
+class PilesResetController extends CommonController {
     
     /*声明数据表Model对象*/
 //     public $tblChargTmp;
@@ -24,41 +24,35 @@ class PilesChargingController extends CommonController {
 	}
 	
 	/**
-	 * @Title: 电桩启停控制
-	 * @Description: 返回启停控制结果
+	 * @Title: 重启电桩
+	 * @Description: 返回重启控制结果
 	 * @param string QRCode 桩二维码
-	 * @param string gunCode 枪编号
-	 * @param string cmdType 启停命令
-	 * @param string userID 用户编号
 	 * @return JSON
 	 * @throws
 	 */
-	public function control() {
+	public function reset() {
 	    set_time_limit(120);
 	    
 	    $return['success'] = true;
 	    
 	    $QRCode = I('post. QRCode','','trim'); // 电桩二维码编号
-	    $gunCode = I('post.gunCode','1'); // 充电枪编号,APP用户从界面选择,默认单枪1号枪
-	    $cmdType = I('post.cmdType','1'); // 命令，1开启，2关闭
-	    $userID = I('post.userID'); // 用户ID
 	    
-	    if (is_empty($QRCode)||is_empty($gunCode)||is_empty($cmdType)||is_empty($userID)){
+	    if (is_empty($QRCode)){
 	        $return['status'] = '-1';
-	        $return['code']='-888';
+	        $return['code']='888';
 	        $return['msg'] = '传参不完整';
 	        
 	    }else{
-	        $cmdRTNArray=pile_control($QRCode,$gunCode,$cmdType,$userID); // 返回电桩启停控制结果的状态数组
+	        $cmdRTNArray=reset_pile($QRCode); // 返回电桩重启控制结果的状态数组
 	        switch ($cmdRTNArray['status']) {
 	            case '0':
 	                $return['status'] = '0';
-	                $return['msg']=$cmdRTNArray['msg']; // 电桩启停成功
+	                $return['msg']=$cmdRTNArray['msg']; // 电桩重启成功
 	                break;
 	            case '-1':
 	                $return['status'] = '-1';
 	                $return['code']='10101';
-	                $return['msg']=$cmdRTNArray['msg']; // 电桩启停失败;
+	                $return['msg']=$cmdRTNArray['msg']; // 电桩重启失败;
 	                break;
 	            case '-2':
 	                $return['status'] = '-1';
