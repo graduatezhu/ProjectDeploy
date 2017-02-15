@@ -16,7 +16,7 @@ class PilesPriceModifyController extends CommonController {
 	    
 		parent::_initialize(); //调用父类成员函数
 		
-		A('Public')->chkPublicToken(); // 校验APP访问接口时传入的TOKEN
+		//A('Public')->chkPublicToken(); // 校验APP访问接口时传入的TOKEN
 		
 		/*实例化模型对象*/
 // 		$this->tblChargTmp=D('ChargeTmp');
@@ -37,28 +37,34 @@ class PilesPriceModifyController extends CommonController {
 	    $QRCode=I('post.QRCode','','trim');
 	    $price=I('post.price','','trim');
 	    
-	    $cmdRTNArray=modify_pile_price($QRCode,$price); // 返回命令结果的状态数组
-	    
-	    switch($cmdRTNArray['status']){
-	        case '0':
-	            $return['status']='0';
-	            $return[msg]='电价修改成功';
-	            break;
-	        case '-1':
-	            $return['status']='-1';
-	            $return['code']='10201';
-	            $return[msg]='电价修改成功';
-	            break;
-            case '-2':
-                $return['status']='-1';
-                $return['code']='10202';
-                $return[msg]='电价修改成功';
-                break;
-            case '-3':
-                $return['status']='-1';
-                $return['code']='10203';
-                $return[msg]='电价修改成功';
-                break;
+	    if (is_empty($QRCode)||is_empty($price)){
+	        $return['status'] = '-1';
+	        $return['code']='888';
+	        $return['msg'] = '传参不完整';
+	    }else{
+    	    $cmdRTNArray=modify_pile_price($QRCode,$price); // 返回命令结果的状态数组
+    	    
+    	    switch($cmdRTNArray['status']){
+    	        case '0':
+    	            $return['status']='0';
+    	            $return[msg]='电价修改成功';
+    	            break;
+    	        case '-1':
+    	            $return['status']='-1';
+    	            $return['code']='10201';
+    	            $return[msg]='电价修改成功';
+    	            break;
+                case '-2':
+                    $return['status']='-1';
+                    $return['code']='10202';
+                    $return[msg]='电价修改成功';
+                    break;
+                case '-3':
+                    $return['status']='-1';
+                    $return['code']='10203';
+                    $return[msg]='电价修改成功';
+                    break;
+    	    }
 	    }
 	    
 	    echo json_encode($return,JSON_UNESCAPED_UNICODE);

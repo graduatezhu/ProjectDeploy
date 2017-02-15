@@ -36,7 +36,7 @@ class PilesLockController extends CommonController {
 	    set_time_limit(120);
 	    
 	    $return['success'] = true;
-	    
+
 	    $QRCode = I('post. QRCode','','trim'); // 电桩二维码编号
 	    $gunCode = I('post.gunCode','1'); // 充电枪编号,APP用户从界面选择,默认单枪1号枪
 	    $cmdType = I('post.cmdType','1'); // 命令，1开启，2关闭

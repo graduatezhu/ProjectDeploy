@@ -178,7 +178,7 @@ function switch_pile($QRcode, $gun, $type,$userID) {
     // 生成校验码并替换校验码位'xx'
     $code=generate_code($frame);
     $frame=substr_replace($frame, $code, -4,2);
-    // return $frame;
+//     return $frame;
 
     /*发送命令帧*/
     // 生成数组
@@ -189,7 +189,7 @@ function switch_pile($QRcode, $gun, $type,$userID) {
     }
     // 发送
     $receiveFrame=send_frame($frameArray);
-    // return $receiveFrame;
+// return $receiveFrame;
     
     if($receiveFrame['status']=='0'){
         /*正常返回命令应答帧*/
@@ -198,12 +198,12 @@ function switch_pile($QRcode, $gun, $type,$userID) {
         $boolResult=verifiy_code($receiveFrame['info']);
         
         if ($boolResult) {
-            if(substr($receiveFrame, -6,2)=='00'){
+            if(substr($receiveFrame['info'], -6,2)=='00'){
                 $return['status']='0';
                 $return['msg']='电桩'.$switch.'成功';
             }else {
                 $return['status']='-1';
-                //$return['frameFromServer']=$receiveFrame; // for dubug
+                $return['frameFromServer']=$receiveFrame; // for dubug
                 $return['msg']='电桩'.$switch.'失败';
             }
         
@@ -269,7 +269,7 @@ function modify_pile_price($QRcode,$price) {
         $boolResult=verifiy_code($receiveFrame['info']); // 校验服务端返回的应答帧
         
         if ($boolResult) {
-            if(substr($receiveFrame, -8,2)=='00'){
+            if(substr($receiveFrame['info'], -8,2)=='00'){
                 $return['status']='0';
                 $return['msg']='电价修改成功';
             }else {
@@ -333,7 +333,7 @@ function reset_pile($QRcode){
         $boolResult=verifiy_code($receiveFrame['info']); // 校验服务端返回的应答帧
 
         if ($boolResult) {
-            if(substr($receiveFrame, -5,1)=='0'){
+            if(substr($receiveFrame['info'], -5,1)=='0'){
                 $return['status']='0';
                 $return['msg']='电桩重启成功';
             }else {
@@ -407,7 +407,7 @@ function lock_pile($QRcode, $gun, $type) {
         $boolResult=verifiy_code($receiveFrame['info']);
 
         if ($boolResult) {
-            if(substr($receiveFrame, -6,2)=='00'){
+            if(substr($receiveFrame['info'], -6,2)=='00'){
                 $return['status']='0';
                 $return['msg']='电桩'.$switch.'成功';
             }else {
@@ -431,3 +431,6 @@ function lock_pile($QRcode, $gun, $type) {
     return $return;
 
 }
+
+// $cmdRTNArray=switch_pile('000860011001014001001','1','1','56');
+// print_r($cmdRTNArray);
