@@ -39,7 +39,7 @@ class PilesResetController extends CommonController {
 	    
 	    if (is_empty($QRCode)){
 	        $return['status'] = '-1';
-	        $return['code']='888';
+	        $return['code']='10002';
 	        $return['msg'] = '传参不完整';
 	        
 	    }else{

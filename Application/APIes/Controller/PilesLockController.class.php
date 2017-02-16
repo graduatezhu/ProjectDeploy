@@ -37,13 +37,13 @@ class PilesLockController extends CommonController {
 	    
 	    $return['success'] = true;
 
-	    $QRCode = I('post. QRCode','','trim'); // 电桩二维码编号
+	    $QRCode = I('post.QRCode','','trim'); // 电桩二维码编号
 	    $gunCode = I('post.gunCode','1'); // 充电枪编号,APP用户从界面选择,默认单枪1号枪
 	    $cmdType = I('post.cmdType','1'); // 命令，1开启，2关闭
 	    
 	    if (is_empty($QRCode)||is_empty($gunCode)||is_empty($cmdType)){
 	        $return['status'] = '-1';
-	        $return['code']='888';
+	        $return['code']='10002';
 	        $return['msg'] = '传参不完整';
 	        
 	    }else{

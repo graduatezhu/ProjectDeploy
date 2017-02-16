@@ -36,10 +36,10 @@ class PilesPriceModifyController extends CommonController {
 	    
 	    $QRCode=I('post.QRCode','','trim');
 	    $price=I('post.price','','trim');
-	    
+
 	    if (is_empty($QRCode)||is_empty($price)){
 	        $return['status'] = '-1';
-	        $return['code']='888';
+	        $return['code']='10002';
 	        $return['msg'] = '传参不完整';
 	    }else{
     	    $cmdRTNArray=modify_pile_price($QRCode,$price); // 返回命令结果的状态数组

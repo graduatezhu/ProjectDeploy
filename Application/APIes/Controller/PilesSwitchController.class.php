@@ -37,15 +37,17 @@ class PilesSwitchController extends CommonController {
 	    set_time_limit(120);
 	    
 	    $return['success'] = true;
-	    echo json_encode($return,JSON_UNESCAPED_UNICODE);die;
-	    $QRCode = I('post. QRCode','','trim'); // 电桩二维码编号
+
+	    $QRCode = I('post.QRCode','','trim'); // 电桩二维码编号
 	    $gunCode = I('post.gunCode','1'); // 充电枪编号,APP用户从界面选择,默认单枪1号枪
 	    $cmdType = I('post.cmdType','1'); // 命令，0开启，1关闭
 	    $userID = I('post.userID'); // 用户ID
-// var_dump($QRCode);die;
+
+// 	    echo $QRCode;die;
+	    
 	    if (is_empty($QRCode)||is_empty($gunCode)||is_empty($cmdType)||is_empty($userID)){
 	        $return['status'] = '-1';
-	        $return['code']='-888';
+	        $return['code']='10002';
 	        $return['msg'] = '传参不完整';
 	        
 	    }else{
