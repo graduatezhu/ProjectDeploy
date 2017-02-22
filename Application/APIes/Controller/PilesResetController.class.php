@@ -47,22 +47,22 @@ class PilesResetController extends CommonController {
 	        switch ($cmdRTNArray['status']) {
 	            case '0':
 	                $return['status'] = '0';
-	                $return['msg']=$cmdRTNArray['msg']; // 电桩重启成功
+	                $return['msg']='电桩重启成功'; // 电桩重启成功
 	                break;
 	            case '-1':
 	                $return['status'] = '-1';
-	                $return['code']='10101';
-	                $return['msg']=$cmdRTNArray['msg']; // 电桩重启失败;
+	                $return['code']='10601';
+	                $return['msg']='电桩重启失败'; // 电桩重启失败;
 	                break;
 	            case '-2':
 	                $return['status'] = '-1';
-	                $return['code']='10102';
-	                $return['msg']=$cmdRTNArray['msg']; // 命令应答帧校验错误
+	                $return['code']='10602';
+	                $return['msg']='电桩server应答校验错误'; // 命令应答帧校验错误
 	                break;
 	            case '-3':
 	                $return['status'] = '-1';
-	                $return['code']='10103';
-	                $return['msg']=$cmdRTNArray['msg']; // APP后台身份校验错误
+	                $return['code']='10603';
+	                $return['msg']='开放平台身份校验错误'; // 开放平台身份校验错误
 	                break;
 	        }
 	        

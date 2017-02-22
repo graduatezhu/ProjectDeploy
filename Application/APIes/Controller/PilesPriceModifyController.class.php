@@ -47,22 +47,22 @@ class PilesPriceModifyController extends CommonController {
     	    switch($cmdRTNArray['status']){
     	        case '0':
     	            $return['status']='0';
-    	            $return[msg]='电价修改成功';
+    	            $return['msg']='电价修改成功';
     	            break;
     	        case '-1':
     	            $return['status']='-1';
-    	            $return['code']='10201';
-    	            $return[msg]='电价修改成功';
+    	            $return['code']='10501';
+    	            $return['msg']='已插枪，无法修改电价';
     	            break;
                 case '-2':
                     $return['status']='-1';
-                    $return['code']='10202';
-                    $return[msg]='电价修改成功';
+                    $return['code']='10502';
+                    $return['msg']='电桩server应答帧校验错误';
                     break;
                 case '-3':
                     $return['status']='-1';
-                    $return['code']='10203';
-                    $return[msg]='电价修改成功';
+                    $return['code']='10503';
+                    $return['msg']='开放平台身份校验错误';
                     break;
     	    }
 	    }

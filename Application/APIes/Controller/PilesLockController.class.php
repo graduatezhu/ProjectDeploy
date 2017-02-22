@@ -39,7 +39,7 @@ class PilesLockController extends CommonController {
 
 	    $QRCode = I('post.QRCode','','trim'); // 电桩二维码编号
 	    $gunCode = I('post.gunCode','1'); // 充电枪编号,APP用户从界面选择,默认单枪1号枪
-	    $cmdType = I('post.cmdType','1'); // 命令，1开启，2关闭
+	    $cmdType = I('post.cmdType','1'); // 命令，0锁定 1解锁
 	    
 	    if (is_empty($QRCode)||is_empty($gunCode)||is_empty($cmdType)){
 	        $return['status'] = '-1';
@@ -55,17 +55,17 @@ class PilesLockController extends CommonController {
 	                break;
 	            case '-1':
 	                $return['status'] = '-1';
-	                $return['code']='10101';
+	                $return['code']='10401';
 	                $return['msg']=$cmdRTNArray['msg']; // 电桩锁定/解锁失败;
 	                break;
 	            case '-2':
 	                $return['status'] = '-1';
-	                $return['code']='10102';
+	                $return['code']='10402';
 	                $return['msg']=$cmdRTNArray['msg']; // 命令应答帧校验错误
 	                break;
 	            case '-3':
 	                $return['status'] = '-1';
-	                $return['code']='10103';
+	                $return['code']='10403';
 	                $return['msg']=$cmdRTNArray['msg']; // APP后台身份校验错误
 	                break;
 	        }

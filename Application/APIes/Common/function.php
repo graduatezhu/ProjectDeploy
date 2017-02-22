@@ -103,23 +103,24 @@ function send_frame($commandArray){
         $receiveAuthStr = "";
         $receiveAuthStr = socket_read($socket, 1024, PHP_BINARY_READ);  // 采用二进制方式接收数据
         $receiveAuthStrHex = bin2hex($receiveAuthStr);  // 将2进制数据转换成16进制
-        // return '身份校验帧：'.$receiveAuthStrHex; // for debug
+//  return '身份校验应答帧：'.$receiveAuthStrHex; // for debug
         
         // 校验服务端返回的身份验证帧应答
         $boolResult=verifiy_code(strtoupper($receiveAuthStrHex));
-        // return '身份校验结果：'.$boolResult;
+// return '身份校验结果：'.$boolResult; // for debug
 
         if (!$boolResult) {
             $return['status'] ='-1';
-            $return['msg']='APP后台身份校验错误';
+            $return['msg']='开放平台身份校验错误';
 
         }else{
-            // 命令帧
+            // 身份校验成功后发送命令帧
             $commandFrame='';
             for ($j = 0; $j < count($commandArray); $j++) {
                 $commandFrame.=chr(hexdec($commandArray[$j]));
             }
-            // return '发送的命令帧：'.bin2hex($commandFrame); // for debug
+return '待发送的命令帧：'.bin2hex($commandFrame); // for debug
+
             socket_write($socket, $commandFrame);//发送命令帧
 
             $receiveCommandStr = "";
@@ -131,9 +132,15 @@ function send_frame($commandArray){
             $return['info']=$receiveCommandStrHex; // 返回应答帧
 
         }
-        return $return;
+        return $return;// 所处位置？
+    }else{
+        $errorcode  =  socket_last_error();
+        $errormsg  =  socket_strerror($errorcode);
+        die( "Couldn't connect socket: [ $errorcode ]  $errormsg" );
     }
     socket_close($socket);  // 关闭Socket
+    
+//     return $return; // 所处位置？
 }
 
 /**
@@ -178,7 +185,7 @@ function switch_pile($QRcode, $gun, $type,$userID) {
     // 生成校验码并替换校验码位'xx'
     $code=generate_code($frame);
     $frame=substr_replace($frame, $code, -4,2);
-//     return $frame;
+//  return $frame;
 
     /*发送命令帧*/
     // 生成数组
@@ -262,6 +269,7 @@ function modify_pile_price($QRcode,$price) {
      
     // 发送
     $receiveFrame=send_frame($frameArray);
+// return $receiveFrame; // for debug    
     
     /*正常返回命令应答帧*/
     if($receiveFrame['status']=='0'){
@@ -272,11 +280,16 @@ function modify_pile_price($QRcode,$price) {
             if(substr($receiveFrame['info'], -8,2)=='00'){
                 $return['status']='0';
                 $return['msg']='电价修改成功';
+                $return['frameFromServer']=$receiveFrame; // for debug
             }else {
-                if(substr($receiveFrame, -6,2)=='01'){
+                if(substr($receiveFrame['info'], -6,2)=='01'){
                     $return['status']='-1';
-                    //$return['frameFromServer']=$receiveFrame; // for debug
+                    $return['frameFromServer']=$receiveFrame; // for debug
                     $return['msg']='已插枪，无法修改电价';
+                }else{
+                    $return['status']='-1';
+                    $return['frameFromServer']=$receiveFrame; // for debug
+                    $return['msg']='其他错误';
                 }
             }
         }else{
@@ -286,7 +299,7 @@ function modify_pile_price($QRcode,$price) {
     }else{
         /*APP后台身份验证错误*/
         $return['status']='-3';
-        $return['msg']='APP后台身份校验错误';
+        $return['msg']='开放平台身份校验错误';
     }
 
     return $return;
@@ -310,12 +323,13 @@ function reset_pile($QRcode){
     $pileNO = substr($QRcode,18,3).'A';
 
     // 组装待校验帧,'xx'为待校验位
-    $frame='85'.'0012'.'16'.$stationNO.$pileNO.'0'.'xx'.'7E';
+    $frame='85'.'0012'.'16'.$stationNO.$pileNO.'00'.'xx'.'7E';
 
     // 生成校验码并替换校验码位'xx'
     $code=generate_code($frame);
     $frame=substr_replace($frame, $code, -4,2);
-
+//  return $frame;
+    
     /*发送命令帧*/
     // 生成数组
     $j=0;
@@ -326,6 +340,7 @@ function reset_pile($QRcode){
      
     // 发送
     $receiveFrame=send_frame($frameArray);
+return $receiveFrame;
 
     /*正常返回命令应答帧*/
     if($receiveFrame['status']=='0'){
@@ -343,12 +358,12 @@ function reset_pile($QRcode){
             }
         }else{
             $return['status']='-2';
-            $return['msg']='应答帧校验错误';
+            $return['msg']='重启应答帧校验错误';
         }
     }else{
-        /*APP后台身份验证错误*/
+        /*开放平台身份验证错误*/
         $return['status']='-3';
-        $return['msg']='APP后台身份校验错误';
+        $return['msg']='开放平台身份校验错误!';
     }
 
     return $return;
@@ -360,7 +375,7 @@ function reset_pile($QRcode){
  * @access public
  * @param string $QRcode 二维码
  * @param string $gun 枪号
- * @param string $type 命令类型
+ * @param string $type 命令类型 1锁定 0解锁
  * @return array 控制结果
  * @author ZXD
  */
@@ -412,7 +427,7 @@ function lock_pile($QRcode, $gun, $type) {
                 $return['msg']='电桩'.$switch.'成功';
             }else {
                 $return['status']='-1';
-                //$return['frameFromServer']=$receiveFrame; // for dubug
+                $return['frameFromServer']=$receiveFrame; // for dubug
                 $return['msg']='电桩'.$switch.'失败';
             }
 
@@ -424,7 +439,7 @@ function lock_pile($QRcode, $gun, $type) {
     }else{
         /*APP后台身份验证错误*/
         $return['status']='-3';
-        $return['msg']='APP后台身份校验错误';
+        $return['msg']='开放平台身份校验错误';
 
     }
 
@@ -432,5 +447,9 @@ function lock_pile($QRcode, $gun, $type) {
 
 }
 
-// $cmdRTNArray=switch_pile('000860011001014001001','1','1','56');
-// print_r($cmdRTNArray);
+// for debug
+// $cmdRTNArray=lock_pile('000860011001014001001','1','0');
+$cmdRTNArray=reset_pile('000860011001014001001');
+// $cmdRTNArray=switch_pile('000860011001014001001','1','0','101');
+// $cmdRTNArray=modify_pile_price('000860011001014001001','1.2');
+print_r($cmdRTNArray);
