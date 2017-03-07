@@ -119,7 +119,7 @@ function send_frame($commandArray){
             for ($j = 0; $j < count($commandArray); $j++) {
                 $commandFrame.=chr(hexdec($commandArray[$j]));
             }
-return '待发送的命令帧：'.bin2hex($commandFrame); // for debug
+//return '待发送的命令帧：'.bin2hex($commandFrame); // for debug
 
             socket_write($socket, $commandFrame);//发送命令帧
 
@@ -449,7 +449,7 @@ function lock_pile($QRcode, $gun, $type) {
 
 // for debug
 // $cmdRTNArray=lock_pile('000860011001014001001','1','0');
-$cmdRTNArray=reset_pile('000860011001014001001');
+//$cmdRTNArray=reset_pile('000860011001014001001');
 // $cmdRTNArray=switch_pile('000860011001014001001','1','0','101');
 // $cmdRTNArray=modify_pile_price('000860011001014001001','1.2');
-print_r($cmdRTNArray);
+//print_r($cmdRTNArray);

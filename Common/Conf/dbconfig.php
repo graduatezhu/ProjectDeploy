@@ -2,12 +2,12 @@
 //数据库配置
 $arr1 = array(
     'DB_TYPE'           => 'mysql',     // 数据库类型
-    'DB_HOST'           => '127.0.0.1', // 服务器地址
-    'DB_NAME'           => 'e_charge',  // 数据库名
-    'DB_USER'           => 'root',      // 用户名
-    'DB_PWD'            => 'roots',     // 密码
+    'DB_HOST'           => '121.42.53.24', // 服务器地址
+    'DB_NAME'           => 'db_app',  // 数据库名
+    'DB_USER'           => 'app',      // 用户名
+    'DB_PWD'            => 'app',     // 密码
     'DB_PORT'           => '3306',      // 端口
-    'DB_PREFIX'         => 'e_',        // 表前缀
+    //'DB_PREFIX'         => '',        // 表前缀
     'DB_CHARSET'        => 'utf8',      // 字符集
 );
 
