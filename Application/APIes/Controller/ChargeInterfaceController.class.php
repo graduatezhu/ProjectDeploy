@@ -121,7 +121,7 @@ class ChargeInterfaceController extends CommonController{
     * @param float lat 用户经度
     * @param float lng 用户纬度
     * @return JSON
-    * @throws
+    * @throw s
     */
 
     public function searchStationList(){
