@@ -1,10 +1,10 @@
 <?php
-
+/*
 namespace APIes\Controller;
 
-use Think\Controller;
+use Think\Controller;*/
 
-class FavoriteController extends Controller {
+class FavoriteController extends \Think\Controller {
 	/*
 	@用户收藏
 	@time：2017-03-06
@@ -22,6 +22,51 @@ class FavoriteController extends Controller {
 		A('Tokens')->PublicToken();//验证 公共 token
 	}*/
 	//收藏租赁点
+	public function zfavorite(){
+		//连接服务器标识
+		$return['success']=true;
+		if (IS_POST) {
+			//$token=I('post.token','','strip_tags');
+			$userid=trim(I('post.userid')==''?'':I('post.userid','','strip_tags'));
+			$zc_stationid=trim(I('post.zc_stationid')==''?'':I('post.zc_stationid','','strip_tags'));
+			if(empty($userid)||empty($zc_stationid)){
+				$return['msg']='参数不完整';
+				$return['code']='-10000';
+			}else{
+				$val['userid']=$userid;
+				$val['zc_stationid']=$zc_stationid;
+				$mo=D('Zcfavorite');
+				$ismo=$mo->where($val)->select();
+				if($ismo){
+					$return['status']=-1;
+					$return['code']='10003';
+					$return['msg']='已经添加!';
+					$return['iscollect']='3';
+					echo jsonStr($return);exit;
+				}
+				$moo=$mo->add($val);
+				if ($moo) {
+					$return['status']=0;
+					$return['msg']='添加成功!';
+					$return['code']='10001';
+					//$return['info']=$mo;
+					$return['isfavorite']='1';
+				}else{
+					$return['status']=-1;
+					$return['code']='10003';
+					$return['msg']='添加失败!';
+					$return['iscollect']='2';
+				}
+			}
+		}else{
+			$return['status']=-1;
+			$return['msg']='此操作失败!';
+			$return['code']='10003';
+		}
+		//print_r($return);die;
+		echo jsonStr($return);exit;
+	}
+	//收藏租赁点列表
 	public function zcollect(){
 		//连接服务器标识
 		$return['success']=true;
