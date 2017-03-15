@@ -111,10 +111,11 @@ class ZcStationModel extends Model{
 		return $zhan;
 	}
 	//地图弹窗
-	public function maptans($lat,$lng){
+	public function maptans($lat,$lng,$stationid){
 		$field='id,name,address,lat,lng';
+		$map['id']=$stationid;
 		//距离
-		$maptan=$this->pubsel($field,'','','');
+		$maptan=$this->pubsel($field,'',$map,'');
 		foreach ($maptan as $k => $v) {
 			$maptan[$k]['distance']=sprintf('%.2f',getDistance($lat,$lng,$v['lat'],$v['lng'])/1000);
 			//车辆数
@@ -130,10 +131,11 @@ class ZcStationModel extends Model{
 	}
 	//地图筛选
 	public function mapchoices($val){
+		//print_r($val);die;
 		$field='e_zc_station.id,e_zc_station.name,e_zc_station.lat,e_zc_station.lng';
 		//判断提交参数
 		if ($val['iscar']==1) {
-			$map['occupation']='0';
+			$map['occupation']=array('eq','0');
 		}
 		//续航km
 		if ($val['batterylife']==1) {
@@ -147,32 +149,42 @@ class ZcStationModel extends Model{
 		}
 		//乘坐人
 		if ($val['capacity']==1) {
-			$map['capacity']='2';
+			$map['capacity']=array('eq','2');
 		}elseif ($val['capacity']==2) {
-			$map['capacity']='5';
+			$map['capacity']=array('eq','5');
 		}elseif ($val['capacity']==3) {
-			$map['capacity']='7';
+			$map['capacity']=array('eq','7');
+		}elseif($val['capacity']==4){
+			$map['capacity']=array('in','2,5');
+		}elseif ($val['capacity']==5) {
+			$map['capacity']=array('in','2,7');
+		}elseif($val['capacity']==6){
+			$map['capacity']=array('in','5,7');
 		}
 		//comfortable
 		if ($val['equipment']==1) {
-			$map['equipment']='1';
-		}elseif ($equipment==2) {
-			$map['equipment']='2';
-		}elseif($equipment==3){
-			$map['equipment']='3';
+			$map['equipment']=array('eq','1');
+		}elseif ($val['equipment']==2) {
+			$map['equipment']=array('eq','2');
+		}elseif($val['equipment']==3){
+			$map['equipment']=array('eq','3');
+		}elseif ($val['equipment']==4) {
+			$map['equipment']=array('in','1,2');
+		}elseif ($val['equipment']==5) {
+			$map['equipment']=array('in','1,3');
+		}elseif ($val['equipment']==6) {
+			$map['equipment']=array('in','2,3');
 		}
+		//print_r($map);die;
 		$a1=$this->pubsel($field,'','');
 		foreach ($a1 as $k => $v) {
 			static $iid=0;
 			$field1='occupation';
 			$join='e_zc_cars on e_zc_cars.station_id=e_zc_station.id';
 			$iid=$v['id'];
-			/*if (empty($map)) {
-				$map['occupation']='0';
-			}*/
-			$map['e_zc_cars.station_id']=$iid;
+			$map['e_zc_cars.station_id']=array('eq',$iid);
 			$a2=$this->pubsell($field1,$join,$map,'');
-	        //某站空闲车辆数
+	        //某站空闲车辆
 			if($a2!=0){
 				$a1[$k]['freecar']=1;
 			}else{
@@ -180,37 +192,73 @@ class ZcStationModel extends Model{
 			}
 			//获取mileage；
 			$field2='e_zc_cars.id,e_zc_cars.occupation,e_zc_cars.sn';
-			$a3=$this->pubsel($field2,$join,$map,'');
-			foreach ($a3 as $k2 => $v2) {
-				$ssn[$k2]=$v2['sn'];
+			static $a3='';
+			foreach ($a3 as $kk => $vv) {
+				unset($a3[$kk]);
+			}
+			$a3=$this->pubseld($field2,$join,$map,'');
+			//print_r($a3);
+			static $sn=0;
+			static $yuan1='';
+			/*foreach ($a3 as $k2 => $v2) {
+				$yuan1=$v2['sn'];
+				$ssn[$k2]=$yuan1;
+			}*/
+			static $ssn=array();
+			for ($i=0; $i <count($a3); $i++) {
+				if(empty($a3[$i])){
+					unset($a3[$i]);
+				}			
+			}
+			for ($i=0; $i <count($a3); $i++) {
+					$ssn[$i]=$a3[$i]['sn'];
+			}
+			foreach ($ssn as $ke1 => $ve1) {
+				if ($ke1>=count($a3)) {
+					unset($ssn[$ke1]);
+				}
 			}
 			$sn=implode(',',$ssn);
+			//print_r($sn);
 			$url = 'http://221.123.179.91:9819/yydl/GetCarsStatus.ashx?SN=' .$sn. '&customerFlag=000';// 智信通地址
             $file=json_decode( file_get_contents ( $url ),true );
+            
+            //print_r(count($file['cars']));
             foreach ($file['cars'] as $k3 => $v3) {
-            	$mileage[$k3]=$v3['mileage'];
+            	static $yuan='';
+            	$yuan=$v3['mileage'];
+            	$mileage[$k3]=$yuan;
             }
-            for ($i=0; $i < count($mileage); $i++) { 
-            	if($mileage[$i]>=$batterylife){
-            		$a1[$k]['freecar']=1;
-            	}else{
-            		$a1[$k]['freecar']=2;
+            //print_r(count($mileage));
+            foreach ($mileage as $kk1 => $vv1) {
+            	if ($kk1>=count($file['cars'])) {
+            		unset($mileage[$kk1]);
             	}
             }
-            //print_r($mileage);die;
+            $a1[$k]['mileage']=max($mileage);
 			//unset($a1[$k]['id']);
 			unset($a1[$k]['name']);
+		}
+		//print_r($a1);
+		foreach ($a1 as $key => $val) {
+			if ($val['mileage']<$batterylife) {
+				$a1[$k]['freecar']=2;
+			}else{
+				$a1[$k]['freecar']=1;
+			}
+			unset($a1[$key]['mileage']);
 		}
 		return $a1;
 	}
 	//租车站列表
 	public function renthelists($val){
 		
-		if ($val['city_id']!=0) {
-			$we=array('city_id'=>$val['city_id']);
+		if ($val['city']!=0) {
+			//$we=array('city'=>$val['city']);
+			$we['city']=array('eq',$val['city']);
 		}
 		if ($val['iscar']==1) {
-			$we['occupation']='0';
+			$we['occupation']=array('eq','0');
 		}
 		//续航km
 		if ($val['batterylife']==1) {
@@ -224,19 +272,31 @@ class ZcStationModel extends Model{
 		}
 		//乘坐人
 		if ($val['capacity']==1) {
-			$we['capacity']='2';
+			$we['capacity']=array('eq','2');
 		}elseif ($val['capacity']==2) {
-			$we['capacity']='5';
+			$we['capacity']=array('eq','5');
 		}elseif ($val['capacity']==3) {
-			$we['capacity']='7';
+			$we['capacity']=array('eq','7');
+		}elseif($val['capacity']==4){
+			$we['capacity']=array('in','2,5');
+		}elseif ($val['capacity']==5) {
+			$we['capacity']=array('in','2,7');
+		}elseif($val['capacity']==6){
+			$we['capacity']=array('in','5,7');
 		}
 		//comfortable
 		if ($val['equipment']==1) {
-			$we['equipment']='1';
+			$we['equipment']=array('eq','1');
 		}elseif ($val['equipment']==2) {
-			$we['equipment']='2';
+			$we['equipment']=array('eq','2');
 		}elseif($val['equipment']==3){
-			$we['equipment']='3';
+			$we['equipment']=array('eq','3');
+		}elseif ($val['equipment']==4) {
+			$we['equipment']=array('in','1,2');
+		}elseif ($val['equipment']==5) {
+			$we['equipment']=array('in','1,3');
+		}elseif ($val['equipment']==6) {
+			$we['equipment']=array('in','2,3');
 		}
 		//print_r($we);die;
 		$field='e_zc_station.id,e_zc_station.name,e_zc_station.city,e_zc_station.county,e_zc_station.phone,e_zc_station.lat,e_zc_station.lng';
@@ -265,23 +325,36 @@ class ZcStationModel extends Model{
 			//空闲车辆数
 			$field='occupation';
 			$join='e_zc_cars on e_zc_cars.station_id=e_zc_station.id';
-			$where['e_zc_cars.station_id&occupation']=array(array('eq',$v['id']),array('eq',0),'_multi'=>true);
-			$aa[$k]['freecarnum']=$this->pubsell($filed,$join,$where);
+			$we['e_zc_cars.station_id&occupation']=array(array('eq',$v['id']),array('eq',0),'_multi'=>true);
+			$aa[$k]['freecarnum']=$this->pubsell($filed,$join,$we);
 			//获取mileage；
 			$field2='e_zc_cars.id,e_zc_cars.occupation,e_zc_cars.sn';
-			$a3=$this->pubsel($field2,$join,$where,'');
-			//print_r($a3);die;
+			$a3=$this->pubsel($field2,$join,$we,'');
+			//print_r($a3);
+			//echo count($a3);
 			foreach ($a3 as $k2 => $v2) {
 				$ssn[$k2]=$v2['sn'];
 			}
+			foreach ($ssn as $ks => $vs) {
+				if($ks>=count($a3)){
+					unset($ssn[$ks]);
+				}
+			}
 			$sn=implode(',',$ssn);
+			//print_r($sn);
 			$url = 'http://221.123.179.91:9819/yydl/GetCarsStatus.ashx?SN=' .$sn. '&customerFlag=000';// 智信通地址
             $file=json_decode( file_get_contents ( $url ),true );
+            //print_r(count($file['cars']));
             foreach ($file['cars'] as $k3 => $v3) {
             	$mileage[$k3]=$v3['mileage'];
             }
+            foreach ($mileage as $kk1 => $vv1) {
+            	if($kk1>=count($a3)){
+            		unset($mileage[$kk1]);
+            	}
+            }
             $aa[$k]['mileage']=max($mileage);
-            //print_r($mileage);die;
+            //print_r($mileage);
             static $jianx=0;
             for ($i=0; $i < count($mileage); $i++) { 
             	if($mileage[$i]<$batterylife){

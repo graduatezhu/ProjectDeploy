@@ -21,6 +21,18 @@ class ZcfavoriteModel extends Model{
             }
             $sn=implode(',',$xarr);
 	        //某站空闲车辆数
+             /*$url = 'http://221.123.179.91:9819/yydl/GetCarsStatus.ashx?SN=' .$sn. '&customerFlag=000';// 智信通地址
+            $file=json_decode( file_get_contents ( $url ),true );
+            foreach ($file['cars'] as $key => $valu) {
+                $mileage[$key]=$valu['mileage'];
+            }
+            foreach ($mileage as $key1 => $v) {
+                if($key1>=count($xarr)){
+                    unset($mileage[$key1]);
+                }
+            }
+            //print_r($mileage);
+            $ar1[$key]['mileage']=max($mileage);*/
             $url = 'http://221.123.179.91:9819/yydl/GetCarsStatus.ashx?SN=' .$sn. '&customerFlag=000';// 智信通地址
             $file=json_decode( file_get_contents ( $url ),true );
             foreach ($file['cars'] as $key => $valu) {
