@@ -58,3 +58,49 @@ function getDistance($lat1, $lng1, $lat2, $lng2)
 
     return round($calculatedDistance);
 }
+function jsonStr($arr) {//不过滤敏感词
+  $str = compress_html(urldecode( json_encode( urlencode_deep(htmlspecialchars_deep($arr)) ) ));
+  return $str;
+}
+function urlencode_deep($value){
+  if(is_array($value)){
+    $value = array_map('urlencode_deep', $value);
+  }else if(is_object($value)){
+    $value = ($value);
+  }else{
+    $value = urlencode($value);
+  }
+  return $value;
+}
+function htmlspecialchars_deep($value){
+  if(is_array($value)){
+    $value = array_map('htmlspecialchars_deep', $value);
+  }else if(is_object($value)){
+    $value = ($value);
+  }else{
+    $value = htmlspecialchars($value);
+  }
+  return $value;
+}
+function compress_html($string) { 
+  $string = str_replace("\r\n", '\\n', $string); 
+  $string = str_replace("\n", '\\n', $string);
+  // $string = str_replace("\t", '', $string);
+  $pattern = array (
+    "/> *([^ ]*) *</", //去掉注释标记 
+    // "/[\s]+/", 
+    "/<!--[^!]*-->/", 
+    "/\" /", 
+    "/ \"/", 
+    "'/\*[^*]*\*/'" 
+  ); 
+  $replace = array (
+    ">\\1<", 
+    // "\n", 
+    "", 
+    "\"", 
+    "\"", 
+    "" 
+  ); 
+  return preg_replace($pattern, $replace, $string); 
+} 
