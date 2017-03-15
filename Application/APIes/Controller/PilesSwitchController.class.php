@@ -16,7 +16,7 @@ class PilesSwitchController extends CommonController {
 	    
 		parent::_initialize(); //调用父类成员函数
 		
-		A('Public')->chkPublicToken(); // 校验APP访问接口时传入的TOKEN
+		//A('Public')->chkPublicToken(); // 校验APP访问接口时传入的TOKEN
 		
 		/*实例化模型对象*/
 // 		$this->tblChargTmp=D('ChargeTmp');
@@ -37,6 +37,13 @@ class PilesSwitchController extends CommonController {
 	    set_time_limit(120);
 	    
 	    $return['success'] = true;
+
+
+//		$_POST['QRCode']='000860011001014001010';
+//		$_POST['gunCode']='1';
+//		$_POST['cmdType']='1';
+//		$_POST['userID']='10';
+
 
 	    $QRCode = I('post.QRCode','','trim'); // 电桩二维码编号
 	    $gunCode = I('post.gunCode','1'); // 充电枪编号,APP用户从界面选择,默认单枪1号枪
