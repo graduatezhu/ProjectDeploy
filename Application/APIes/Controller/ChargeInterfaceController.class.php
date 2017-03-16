@@ -185,7 +185,7 @@ class ChargeInterfaceController extends CommonController{
     */
 
     public function searchStationList(){
-        
+
         $return_data=[];//声明一个用来存放返回数据的数组
         $where=[];//声明一个用来存放查询数据的数组
 
