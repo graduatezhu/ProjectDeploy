@@ -30,17 +30,16 @@ class ZstationController extends \Think\Controller {
 			if ($mo) {
 				$return['status']=0;
 				$return['msg']='查询成功!';
-				$return['code']='10001';
 				$return['info']=$mo;
 			}else{
 				$return['status']=-1;
 				$return['msg']='暂无数据!';
-				$return['code']='10002';
+				$return['code']='10003';
 			}
 		}else{
 			$return['status']=-1;
-			$return['msg']='查询失败!';
-			$return['code']='10003';
+			$return['msg']='request fail!';
+			$return['code']='10004';
 		}
 		//print_r($return);die;
 		echo jsonStr($return);exit;
@@ -52,26 +51,32 @@ class ZstationController extends \Think\Controller {
 			//$token=I('post.token','','strip_tags');
 			$lat=trim(I('post.lat')==''?'':I('post.lat','','strip_tags'));
 			$lng=trim(I('post.lng')==''?'':I('post.lng','','strip_tags'));
+			$zc_stationid=trim(I('post.zc_stationid')==''?'':I('post.zc_stationid','','strip_tags'));
 			if (empty($lat)||empty($lng)) {
 				$return['msg']='参数不完整';
-				$return['code']='10003';
+				$return['code']='10002';
 				echo jsonStr($return);exit;
 			}
-			$mo=D('ZcStation')->maptans($lat,$lng);
+			$zc_station=D('ZcStation')->where(array('id'=>$zc_stationid))->select();
+			if(empty($zc_station)){
+							$return['status']=-1;
+							$return['msg']='此站点不存在!';
+							echo jsonStr($return);exit;
+						}
+			$mo=D('ZcStation')->maptans($lat,$lng,$zc_stationid);
 			if ($mo) {
 				$return['status']=0;
 				$return['msg']='查询成功!';
-				$return['code']='10001';
 				$return['info']=$mo;
 			}else{
 				$return['status']=0;
 				$return['msg']='暂无数据!';
-				$return['code']='10002';
+				$return['code']='10003';
 			}
 		}else{
 			$return['status']=-1;
 			$return['msg']='查询失败!';
-			$return['code']='10003';
+			$return['code']='10004';
 		}
 		//print_r($return);die;
 		echo jsonStr($return);exit;
@@ -89,17 +94,16 @@ class ZstationController extends \Think\Controller {
 			if ($mo) {
 				$return['status']=0;
 				$return['msg']='查询成功!';
-				$return['code']='10001';
 				$return['info']=$mo;
 			}else{
-				$return['status']=0;
+				$return['status']=-1;
 				$return['msg']='暂无数据!';
-				$return['code']='10002';
+				$return['code']='10003';
 			}
 		}else{
 			$return['status']=-1;
-			$return['msg']='查询失败!';
-			$return['code']='10003';
+			$return['msg']='request fail !';
+			$return['code']='10004';
 		}
 		echo jsonStr($return);exit;
 	}
@@ -109,7 +113,7 @@ class ZstationController extends \Think\Controller {
 		if (IS_POST) {
 		//$token=I('post.token','','strip_tags');
 			/*$val['userid']=trim(I('post.userid')==''?'':I('post.userid','','strip_tags'));*/
-			$val['city_id']=trim(I('post.city_id')==''?'':I('post.city_id','','strip_tags'));
+			$val['city']=trim(I('post.city')==''?'':I('post.city','','strip_tags'));
 			$val['lat']=trim(I('post.lat')==''?'':I('post.lat','','strip_tags'));
 			$val['lng']=trim(I('post.lng')==''?'':I('post.lng','','strip_tags'));
 
@@ -120,24 +124,24 @@ class ZstationController extends \Think\Controller {
 			$val['equipment']=trim(I('post.equipment')==''?'':I('post.equipment','','strip_tags'));
 			if (empty($val['lat'])||empty($val['lng'])) {
 				$return['msg']='参数不完整';
-				$return['code']='-10000';
+				$return['code']='10002';
 				echo jsonStr($return);exit;
 			}
 			$mo=D('ZcStation')->renthelists($val);
+			//print_r($mo);die;
 			if ($mo) {
 				$return['status']=0;
 				$return['msg']='查询成功!';
-				$return['code']='10001';
 				$return['info']=$mo;
 			}else{
-				$return['status']=0;
+				$return['status']=-1;
 				$return['msg']='暂无数据!';
-				$return['code']='10002';
+				$return['code']='10003';
 			}
 		}else{
 			$return['status']=-1;
-			$return['msg']='查询失败!';
-			$return['code']='10003';
+			$return['msg']='request fail !';
+			$return['code']='10004';
 		}
 		//print_r($return);die;
 		echo jsonStr($return);exit;
@@ -151,28 +155,34 @@ class ZstationController extends \Think\Controller {
 			$lat=trim(I('post.lat')==''?'':I('post.lat','','strip_tags'));
 			$lng=trim(I('post.lng')==''?'':I('post.lng','','strip_tags'));
 			if (empty($search)) {
-				$return['status']=0;
-				$return['msg']='查询为空';
+				$return['status']=-1;
+				$return['msg']='暂无数据';
+				$return['code']='10003';
+				echo jsonStr($return);exit;
+			}
+			if (empty($lat)||empty($lng)) {
+				$return['status']=-1;
+				$return['msg']='传参不完整!';
+				$return['code']='10002';
 			}else{
 				$mo=D('ZcStation');
 				$re=$mo->zsearchs($search,$lat,$lng);
 				if($re){
 					$return['status']=0;
 					$return['msg']='查询成功';
-					$return['code']='10001';
 					$return['info']=$re;
 				}else{
-					$return['status']=0;
+					$return['status']=-1;
 					$return['msg']='暂无数据';
-					$return['code']='10002';
+					$return['code']='10003';
 				}
 				
 			}
 			
 		}else{
-			$return['code']='10003';
+			$return['code']='10004';
 			$return['status']=-1;
-			$return['msg']='此操作失败!';
+			$return['msg']='request fail !';
 		}
 		//print_r($return);die;
 		echo jsonStr($return);exit;
