@@ -7,8 +7,7 @@ class ZcfavoriteModel extends Model{
         $join='e_zc_station on e_zc_station.id=e_zcfavorite.zc_stationid';
         $where=array('e_zcfavorite.userid'=>$val);
         $ar1=$this->pubsel($field,$join,$where);
-        //print_r($ar1);die;
-        static $xarr=array();
+        //static $xarr=array();
         foreach ($ar1 as $key => $v) {
             //续航里程
             $xarr=$this->Table('e_zcfavorite')
@@ -18,6 +17,7 @@ class ZcfavoriteModel extends Model{
             ->join('e_zc_cars on e_zc_cars.station_id=e_zc_station.id')
             ->where(array('e_zc_cars.station_id'=>$v['zc_stationid']))
             ->select();
+           // print_r($xarr);die;
             foreach ($xarr as $keyq => $val) {
                 $ssn[$keyq]=$val['sn'];
             }
@@ -30,18 +30,6 @@ class ZcfavoriteModel extends Model{
             $sn=implode(',',$ssn);
             //print_r($sn);
 	        //某站空闲车辆数
-             /*$url = 'http://221.123.179.91:9819/yydl/GetCarsStatus.ashx?SN=' .$sn. '&customerFlag=000';// 智信通地址
-            $file=json_decode( file_get_contents ( $url ),true );
-            foreach ($file['cars'] as $key => $valu) {
-                $mileage[$key]=$valu['mileage'];
-            }
-            foreach ($mileage as $key1 => $v) {
-                if($key1>=count($xarr)){
-                    unset($mileage[$key1]);
-                }
-            }
-            //print_r($mileage);
-            $ar1[$key]['mileage']=max($mileage);*/
             $url = 'http://221.123.179.91:9819/yydl/GetCarsStatus.ashx?SN=' .$sn. '&customerFlag=000';// 智信通地址
             $file=json_decode( file_get_contents ( $url ),true );
             foreach ($file['cars'] as $keyw => $valu) {
