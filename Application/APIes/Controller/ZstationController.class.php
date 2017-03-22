@@ -112,7 +112,7 @@ class ZstationController extends \Think\Controller {
 		$return['success']=true;
 		if (IS_POST) {
 		//$token=I('post.token','','strip_tags');
-			/*$val['userid']=trim(I('post.userid')==''?'':I('post.userid','','strip_tags'));*/
+			$val['userid']=trim(I('post.userid')==''?'':I('post.userid','','strip_tags'));
 			$val['city']=trim(I('post.city')==''?'':I('post.city','','strip_tags'));
 			$val['lat']=trim(I('post.lat')==''?'':I('post.lat','','strip_tags'));
 			$val['lng']=trim(I('post.lng')==''?'':I('post.lng','','strip_tags'));

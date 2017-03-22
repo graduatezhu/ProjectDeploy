@@ -18,8 +18,8 @@ class ZcfavoriteModel extends Model{
             ->join('e_zc_cars on e_zc_cars.station_id=e_zc_station.id')
             ->where(array('e_zc_cars.station_id'=>$v['zc_stationid']))
             ->select();
-            foreach ($xarr as $key => $val) {
-                $ssn[$key]=$val['sn'];
+            foreach ($xarr as $keyq => $val) {
+                $ssn[$keyq]=$val['sn'];
             }
             foreach ($ssn as $kkk => $val) {
                 if ($kkk>=count($xarr)) {
@@ -44,8 +44,8 @@ class ZcfavoriteModel extends Model{
             $ar1[$key]['mileage']=max($mileage);*/
             $url = 'http://221.123.179.91:9819/yydl/GetCarsStatus.ashx?SN=' .$sn. '&customerFlag=000';// 智信通地址
             $file=json_decode( file_get_contents ( $url ),true );
-            foreach ($file['cars'] as $key => $valu) {
-                $mileage[$key]=$valu['mileage'];
+            foreach ($file['cars'] as $keyw => $valu) {
+                $mileage[$keyw]=$valu['mileage'];
             }
             foreach ($mileage as $ky => $ve) {
                 if($ky>=count($xarr)){
@@ -77,9 +77,7 @@ class ZcfavoriteModel extends Model{
             $ar1[$key]['score']=round($aa1);
 	        //距离
 	        $ar1[$key]['facemiles']=sprintf('%.2f',getDistance($lat,$lng,$v['lat'],$v['lng'])/1000);
-	        //unset($ar1[$key]['zc_stationid']);
-            unset($ar1[$key]['lat']);
-            unset($ar1[$key]['lng']);
+	        //unset($ar1[$key]['id']);
         }
         //print_r($ar1);die;
         return $ar1;
@@ -88,7 +86,7 @@ class ZcfavoriteModel extends Model{
     public function fdels($userid,$fid){
         $where['userid']=$userid;
         if($fid!='c'){
-            $where['id']=$fid;
+            $where['zc_stationid']=$fid;
         }
         return $this->Table('e_zcfavorite')->where($where)->delete();
     }

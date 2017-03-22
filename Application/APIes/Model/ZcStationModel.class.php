@@ -123,11 +123,17 @@ class ZcStationModel extends Model{
 			$join='e_zc_cars on e_zc_cars.station_id=e_zc_station.id';
 			$where['e_zc_cars.station_id&occupation']=array(array('eq',$v['id']),array('eq',0),'_multi'=>true);
 			$maptan[$k]['freecarnum']=$this->pubsell($filed,$join,$where);
-			unset($maptan[$k]['id']);
+			//unset($maptan[$k]['id']);
 			unset($maptan[$k]['lat']);
 			unset($maptan[$k]['lng']);
 		}
-		return $maptan;
+		
+		$maptanq['id']=$maptan[0]['id'];
+		$maptanq['name']=$maptan[0]['name'];
+		$maptanq['address']=$maptan[0]['address'];
+		$maptanq['distance']=$maptan[0]['distance'];
+		$maptanq['freecarnum']=$maptan[0]['freecarnum'];
+		return $maptanq;
 	}
 	//地图筛选
 	public function mapchoices($val){
@@ -250,7 +256,7 @@ class ZcStationModel extends Model{
 		}
 		return $a1;
 	}
-	//租车站列表
+	//租车站列表（城市筛选+右上角筛选设置偏好筛选+智能筛选）
 	public function renthelists($val){
 		
 		if ($val['city']!=0) {
@@ -305,6 +311,7 @@ class ZcStationModel extends Model{
 		//print_r($aa);die;
 		//评分
 		foreach ($aa as $k => $v) {
+			//print_r($v);die;
 			$aa1=$this->Table('e_zc_station')
 			->join('e_zccomment on e_zccomment.zc_stationid=e_zc_station.id')
 			->where(array('e_zc_station.id'=>$v['id']))
@@ -312,13 +319,18 @@ class ZcStationModel extends Model{
 			$aa[$k]['score']=round($aa1);
 			//距离km
 			$aa[$k]['distance']=sprintf('%.2f',getDistance($val['lat'],$val['lng'],$v['lat'],$v['lng'])/1000);
-			$aa2=$this->Table('e_zc_station')
-			->field('zc_stationid')
-			->join('e_zcfavorite on e_zcfavorite.zc_stationid=e_zc_station.id')
-			->where(array('e_zc_station.id'=>$v['id'],'userid'=>$val['userid']))
-			->select();
-			if ($aa2) {
-				$aa[$k]['isfavorite']=1;
+			if (!empty($val['userid'])) {
+				$mapa['e_zcfavorite.userid&e_zcfavorite.zc_stationid']=array(array('eq',$val['userid']),array('eq',$v['id']),'_multi'=>true);
+				$aa2=$this->Table('e_zc_station')
+				->field('e_zcfavorite.zc_stationid')
+				->join('e_zcfavorite on e_zcfavorite.zc_stationid=e_zc_station.id')
+				->where($mapa)
+				->select();
+				if ($aa2) {
+					$aa[$k]['isfavorite']=1;
+				}else{
+					$aa[$k]['isfavorite']=2;
+				}
 			}else{
 				$aa[$k]['isfavorite']=2;
 			}
@@ -369,8 +381,6 @@ class ZcStationModel extends Model{
 			->where(array('e_zc_station.id'=>$v['id']))
 			->avg('e_zc_cars.price');
 			$aa[$k]['smprice']=round($aprice,3);
-			unset($aa[$k]['lat']);
-			unset($aa[$k]['lng']);
 		}
 		$paixu=$val['psort'];
 		if($paixu==1){
