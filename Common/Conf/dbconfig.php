@@ -7,7 +7,7 @@ $arr1 = array(
     'DB_USER'           => 'app',      // 用户名
     'DB_PWD'            => 'app',     // 密码
     'DB_PORT'           => '3306',      // 端口
-    'DB_PREFIX'         => 'e_',        // 表前缀
+    'DB_PREFIX'         => '',        // 表前缀
     'DB_CHARSET'        => 'utf8',      // 字符集
 );
 
