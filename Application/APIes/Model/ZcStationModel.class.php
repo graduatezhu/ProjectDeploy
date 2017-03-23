@@ -66,7 +66,7 @@ class ZcStationModel extends Model{
 			->avg('e_zccomment.grade');
 			$result[$ke]['score']=round($aa1);
 			//距离km
-			$result[$ke]['distance']=sprintf('%.2f',getDistance($lat,$lng,$va['lat'],$va['lng'])/1000);
+			$result[$ke]['distance']=getDistance($lat,$lng,$va['lat'],$va['lng']);
 			//空闲车辆数
 			$fieldd='e_zc_cars.occupation';
 			$joinn='e_zc_cars on e_zc_cars.station_id=e_zc_station.id';
@@ -117,7 +117,7 @@ class ZcStationModel extends Model{
 		//距离
 		$maptan=$this->pubsel($field,'',$map,'');
 		foreach ($maptan as $k => $v) {
-			$maptan[$k]['distance']=sprintf('%.2f',getDistance($lat,$lng,$v['lat'],$v['lng'])/1000);
+			$maptan[$k]['distance']=getDistance($lat,$lng,$v['lat'],$v['lng']);
 			//车辆数
 			$field='occupation';
 			$join='e_zc_cars on e_zc_cars.station_id=e_zc_station.id';
@@ -139,50 +139,52 @@ class ZcStationModel extends Model{
 	public function mapchoices($val){
 		//print_r($val);die;
 		$field='e_zc_station.id,e_zc_station.name,e_zc_station.lat,e_zc_station.lng';
-		//判断提交参数
 		if ($val['iscar']==1) {
-			$map['occupation']=array('eq','0');
+			$we['occupation']=array('eq','0');
 		}
 		//续航km
 		if ($val['batterylife']==1) {
-			$batterylife='50';
+			$batterylife=50;
 		}elseif ($val['batterylife']==2) {
-			$batterylife='100';
+			$batterylife=100;
 		}elseif ($val['batterylife']==3) {
-			$batterylife='150';
+			$batterylife=150;
 		}else{
 			$batterylife='';
 		}
 		//乘坐人
 		if ($val['capacity']==1) {
-			$map['capacity']=array('eq','2');
+			$we['capacity']=array('eq','2');
 		}elseif ($val['capacity']==2) {
-			$map['capacity']=array('eq','5');
+			$we['capacity']=array('eq','5');
 		}elseif ($val['capacity']==3) {
-			$map['capacity']=array('eq','7');
+			$we['capacity']=array('eq','7');
 		}elseif($val['capacity']==4){
-			$map['capacity']=array('in','2,5');
+			$we['capacity']=array('in','2,5');
 		}elseif ($val['capacity']==5) {
-			$map['capacity']=array('in','2,7');
+			$we['capacity']=array('in','2,7');
 		}elseif($val['capacity']==6){
-			$map['capacity']=array('in','5,7');
+			$we['capacity']=array('in','5,7');
 		}
 		//comfortable
 		if ($val['equipment']==1) {
-			$map['equipment']=array('eq','1');
+			$we['equipment']=array('eq','1');
 		}elseif ($val['equipment']==2) {
-			$map['equipment']=array('eq','2');
+			$we['equipment']=array('eq','2');
 		}elseif($val['equipment']==3){
-			$map['equipment']=array('eq','3');
+			$we['equipment']=array('eq','3');
 		}elseif ($val['equipment']==4) {
-			$map['equipment']=array('in','1,2');
+			$we['equipment']=array('in','1,2');
 		}elseif ($val['equipment']==5) {
-			$map['equipment']=array('in','1,3');
+			$we['equipment']=array('in','1,3');
 		}elseif ($val['equipment']==6) {
-			$map['equipment']=array('in','2,3');
+			$we['equipment']=array('in','2,3');
 		}
-		//print_r($map);die;
-		$a1=$this->pubsel($field,'','');
+		//print_r($we);die;
+		$field='e_zc_station.id,e_zc_station.name,e_zc_station.city,e_zc_station.county,e_zc_station.phone,e_zc_station.lat,e_zc_station.lng';
+		$join='e_zc_cars on e_zc_cars.station_id=e_zc_station.id';
+		$a1=$this->pubseld($field,$join,$we,'');
+		//print_r($a1);die;
 		foreach ($a1 as $k => $v) {
 			static $iid=0;
 			$field1='occupation';
@@ -318,7 +320,7 @@ class ZcStationModel extends Model{
 			->avg('e_zccomment.grade');
 			$aa[$k]['score']=round($aa1);
 			//距离km
-			$aa[$k]['distance']=sprintf('%.2f',getDistance($val['lat'],$val['lng'],$v['lat'],$v['lng'])/1000);
+			$aa[$k]['distance']=getDistance($val['lat'],$val['lng'],$v['lat'],$v['lng']);
 			if (!empty($val['userid'])) {
 				$mapa['e_zcfavorite.userid&e_zcfavorite.zc_stationid']=array(array('eq',$val['userid']),array('eq',$v['id']),'_multi'=>true);
 				$aa2=$this->Table('e_zc_station')

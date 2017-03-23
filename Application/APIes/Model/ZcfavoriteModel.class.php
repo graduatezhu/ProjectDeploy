@@ -64,7 +64,7 @@ class ZcfavoriteModel extends Model{
             ->avg('e_zccomment.grade');
             $ar1[$key]['score']=round($aa1);
 	        //距离
-	        $ar1[$key]['facemiles']=sprintf('%.2f',getDistance($lat,$lng,$v['lat'],$v['lng'])/1000);
+	        $ar1[$key]['facemiles']=getDistance($lat,$lng,$v['lat'],$v['lng']);
 	        //unset($ar1[$key]['id']);
         }
         //print_r($ar1);die;
