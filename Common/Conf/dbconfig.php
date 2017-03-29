@@ -2,7 +2,7 @@
 //数据库配置
 $arr1 = array(
     'DB_TYPE'           => 'mysql',     // 数据库类型
-    'DB_HOST'           => '121.42.53.24', // 服务器地址
+    'DB_HOST'           => '192.168.1.100', // 服务器地址
     'DB_NAME'           => 'db_app',  // 数据库名
     'DB_USER'           => 'app',      // 用户名
     'DB_PWD'            => 'app',     // 密码
