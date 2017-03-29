@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TOKEN模块
+ * TOKEN模块 有误供调试
  */
 class TokenController extends CommonController {
 	
