@@ -2,9 +2,8 @@
 /*
  * 超时/长租缴费短信提醒接口
  */
-namespace APIes\Controller;
-use Think\Controller;
-class MessageAlarmController extends Controller {
+
+class MessageAlarmController extends CommonController {
     public function index(){
         $this->display();
     }

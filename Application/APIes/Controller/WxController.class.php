@@ -2,9 +2,8 @@
 /**
 *微信公众号充电接口
 */
-namespace APIes\Controller;
-use Think\Controller;
-class WxController extends Controller {
+
+class WxController extends CommonController {
     public function index(){
     	$this->display();
     }

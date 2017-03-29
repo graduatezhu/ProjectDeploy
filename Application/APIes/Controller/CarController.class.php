@@ -1,7 +1,6 @@
 <?php
-namespace APIes\Controller;
-use Think\Controller;
-class CarController extends Controller {
+
+class CarController extends CommonController {
     public function index(){
         $this->display();
     }

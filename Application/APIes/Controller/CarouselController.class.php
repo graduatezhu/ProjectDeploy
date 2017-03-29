@@ -1,7 +1,6 @@
 <?php
-namespace APIes\Controller;
-use Think\Controller;
-class CarouselController extends Controller {
+
+class CarouselController extends CommonController {
 	public function index(){
 		$this->display();
 	}

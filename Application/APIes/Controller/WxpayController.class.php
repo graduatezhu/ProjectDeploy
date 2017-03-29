@@ -1,9 +1,7 @@
 <?php
-namespace APIes\Controller;
-use Think\Controller;
-require_once("./WXpay/lib/WxPay.Api.php");
 
-class WxpayController extends Controller {
+require_once("./WXpay/lib/WxPay.Api.php");
+class WxpayController extends CommonController {
     public function index(){
 
     	//微信支付类在跟命名空间定义 所以要加上\

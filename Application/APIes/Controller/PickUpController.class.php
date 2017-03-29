@@ -1,11 +1,8 @@
 <?php
-namespace APIes\Controller;
-use Think\Controller;
-
 /*
  * 提车接口，需要更新租车信息表 status 提车状态
  */
-class PickUpController extends Controller {
+class PickUpController extends CommonController {
     public function index(){
         $this->display();
     }

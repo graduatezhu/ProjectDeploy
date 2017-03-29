@@ -2,9 +2,8 @@
 /*
  * 支付宝结算支付接口
  */
-namespace APIes\Controller;
-use Think\Controller;
-class AliBalanceController extends Controller {
+
+class AliBalanceController extends CommonController {
     public function index(){
         $this->display();
     }

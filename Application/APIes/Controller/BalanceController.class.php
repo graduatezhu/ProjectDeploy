@@ -2,9 +2,8 @@
 /*
  * 支付金额为0时，本地结算的接口，无需调用微信或支付宝。调用此接口更新相关业务状态
  */
-namespace APIes\Controller;
-use Think\Controller;
-class BalanceController extends Controller {
+
+class BalanceController extends CommonController {
     public function index(){
         $this->display();
     }

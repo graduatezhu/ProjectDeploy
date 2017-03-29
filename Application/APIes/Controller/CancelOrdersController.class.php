@@ -2,9 +2,8 @@
 /*
  * 取消订单接口
  */
-namespace APIes\Controller;
-use Think\Controller;
-class CancelOrdersController extends Controller {
+
+class CancelOrdersController extends CommonController {
     public function index(){
         $this->display();
     }

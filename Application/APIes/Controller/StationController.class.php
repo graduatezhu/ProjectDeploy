@@ -1,10 +1,6 @@
 <?php
 
-namespace APIes\Controller;
-
-use Think\Controller;
-
-class StationController extends Controller {
+class StationController extends CommonController {
 	public function index() {
 		$this->display ();
 	}
