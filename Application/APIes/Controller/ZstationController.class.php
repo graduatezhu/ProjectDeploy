@@ -26,7 +26,7 @@ class ZstationController extends \Think\Controller {
 		$return['success']=true;
 		if (IS_POST) {
 			//$token=trim(I('post.token')==''?'':I('post.token','','strip_tags'));
-			$mo=D('ZcStation')->rentmaps();
+			$mo=D('EZcStation')->rentmaps();
 			if ($mo) {
 				$return['status']=0;
 				$return['msg']='查询成功!';
@@ -57,13 +57,13 @@ class ZstationController extends \Think\Controller {
 				$return['code']='10002';
 				echo jsonStr($return);exit;
 			}
-			$zc_station=D('ZcStation')->where(array('id'=>$zc_stationid))->select();
+			$zc_station=D('EZcStation')->where(array('id'=>$zc_stationid))->select();
 			if(empty($zc_station)){
 							$return['status']=-1;
 							$return['msg']='此站点不存在!';
 							echo jsonStr($return);exit;
 						}
-			$mo=D('ZcStation')->maptans($lat,$lng,$zc_stationid);
+			$mo=D('EZcStation')->maptans($lat,$lng,$zc_stationid);
 			if ($mo) {
 				$return['status']=0;
 				$return['msg']='查询成功!';
@@ -90,7 +90,7 @@ class ZstationController extends \Think\Controller {
 			$val['batterylife']=trim(I('post.batterylife')==''?'':I('post.batterylife','','strip_tags'));
 			$val['capacity']=trim(I('post.capacity')==''?'':I('post.capacity','','strip_tags'));
 			$val['equipment']=trim(I('post.equipment')==''?'':I('post.equipment','','strip_tags'));
-			$mo=D('ZcStation')->mapchoices($val);
+			$mo=D('EZcStation')->mapchoices($val);
 			if ($mo) {
 				$return['status']=0;
 				$return['msg']='查询成功!';
@@ -127,7 +127,7 @@ class ZstationController extends \Think\Controller {
 				$return['code']='10002';
 				echo jsonStr($return);exit;
 			}
-			$mo=D('ZcStation')->renthelists($val);
+			$mo=D('EZcStation')->renthelists($val);
 			//print_r($mo);die;
 			if ($mo) {
 				$return['status']=0;
@@ -165,7 +165,7 @@ class ZstationController extends \Think\Controller {
 				$return['msg']='传参不完整!';
 				$return['code']='10002';
 			}else{
-				$mo=D('ZcStation');
+				$mo=D('EZcStation');
 				$re=$mo->zsearchs($search,$lat,$lng);
 				if($re){
 					$return['status']=0;

@@ -28,9 +28,9 @@ class FavoriteController extends \Think\Controller {
 		if (IS_POST) {
 			//$token=I('post.token','','strip_tags');
 			$userid=trim(I('post.userid')==''?'':I('post.userid','','strip_tags'));
-			$user=D('Members')->where(array('id'=>$userid))->select();
+			$user=D('EMembers')->where(array('id'=>$userid))->select();
 			$zc_stationid=trim(I('post.zc_stationid')==''?'':I('post.zc_stationid','','strip_tags'));
-			$zcsta=D('ZcStation')->where(array('id'=>$zc_stationid))->select();
+			$zcsta=D('EZcStation')->where(array('id'=>$zc_stationid))->select();
 			if(empty($user)){
 				$return['status']=-1;
 				$return['msg']='此用户不存在!';
@@ -47,7 +47,7 @@ class FavoriteController extends \Think\Controller {
 			}else{
 				$val['userid']=$userid;
 				$val['zc_stationid']=$zc_stationid;
-				$mo=D('Zcfavorite');
+				$mo=D('EZcfavorite');
 				$ismo=$mo->where($val)->select();
 				if($ismo){
 					$return['status']=-1;
@@ -85,7 +85,7 @@ class FavoriteController extends \Think\Controller {
 			$userid=trim(I('post.userid')==''?'':I('post.userid','','strip_tags'));
 			$lat=trim(I('post.lat')==''?'':I('post.lat','','strip_tags'));
 			$lng=trim(I('post.lng')==''?'':I('post.lng','','strip_tags'));
-			$user=D('Members')->where(array('id'=>$userid))->select();
+			$user=D('EMembers')->where(array('id'=>$userid))->select();
 			if(empty($user)){
 							$return['status']=-1;
 							$return['msg']='此用户不存在!';
@@ -95,7 +95,7 @@ class FavoriteController extends \Think\Controller {
 				$return['msg']='参数不完整';
 				$return['code']='10002';
 			}else{
-				$mo=D('Zcfavorite')->seldata($userid,$lat,$lng);
+				$mo=D('EZcfavorite')->seldata($userid,$lat,$lng);
 				//print_r($mo);die;
 				if ($mo) {
 					$return['status']=0;
@@ -129,13 +129,13 @@ class FavoriteController extends \Think\Controller {
 				$return['code']='10002';
 				echo jsonStr($return);exit;
 			}
-			$user=D('Members')->where(array('id'=>$userid))->select();
+			$user=D('EMembers')->where(array('id'=>$userid))->select();
 			if(empty($user)){
 							$return['status']=-1;
 							$return['msg']='此用户不存在!';
 							echo jsonStr($return);exit;
 						}
-			$mo=D('Zcfavorite');
+			$mo=D('EZcfavorite');
 			$isa=$mo->fdels($userid,$fid);
 			//$searchre=$mo->seldata($userid,$lat,$lng);
 			if ($isa) {
