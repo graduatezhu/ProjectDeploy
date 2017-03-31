@@ -29,7 +29,7 @@ define('COMMON_PATH','./Common/');
 
 //追加新分组
 //define('BIND_MODULE','Admin');
-//define('BIND_MODULE','APIes');
+// define('BIND_MODULE','Zuche');
 
 
 
