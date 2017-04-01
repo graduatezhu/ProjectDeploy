@@ -71,29 +71,37 @@ class CarQuotationController extends CommonController {
         $return['success']=true; // 接口通信成功标志
     
         /*分页处理*/
-        $page = I('post.page',1,'intval');//页码，从1开始
-        $pageSize = I('post.pageSize',C('PAGE_LIMIT'),'intval');//分页数
+        $page = I('post.page',1,'intval'); // 页码，从1开始
+        $pageSize = I('post.pageSize',C('PAGE_LIMIT'),'intval'); // 分页数
         $limit = ($page-1)*$pageSize.','.$pageSize;
     
         /*查询数据*/
-        $map['brand']=I('post.brand');
-        $field='id,brand,picture,model,battery_life,battery_capacity,engine,structure,quotation';
-        $re=$this->tblQuotation->selData($map,$limit,$field);
-        
-        $hostAddress= getHostAddress(); // 获取服务器地址
-        foreach ($re as $k=>$v){
-            $re[$k]['picture']=$hostAddress.__ROOT__.$v['picture'];
-        }
-        
-        /*返回数据*/
-        if(empty($re)){
+        $brand=I('post.brand');
+        if(empty($brand)){
             $return['status']=-1;
-			$return['msg']='暂无数据!';
-			$return['code']='10003';
+            $return['msg']='传参不完整';
+            $return['code']='10002';
         }else{
-            $return['status']=0;
-            $return['msg']='查询成功!';
-            $return['info']=$re;
+            $map['brand']=$brand;
+            
+            $field='id,brand,picture,model,battery_life,battery_capacity,battery_type,engine,structure,quotation';
+            $re=$this->tblQuotation->selData($map,$limit,$field);
+            
+            $hostAddress= getHostAddress(); // 获取服务器地址
+            foreach ($re as $k=>$v){
+                $re[$k]['picture']=$hostAddress.__ROOT__.$v['picture'];
+            }
+            
+            /*返回数据*/
+            if(empty($re)){
+                $return['status']=-1;
+                $return['msg']='暂无数据!';
+                $return['code']='10003';
+            }else{
+                $return['status']=0;
+                $return['msg']='查询成功!';
+                $return['info']=$re;
+            }
         }
         
         echo json_encode($return,JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
