@@ -42,8 +42,13 @@ class CarQuotationController extends CommonController {
         $field='id,logo,brand';
         $re=$this->tblQuotation->selData(1,$limit,$field); //where为1默认为全部
         
+        $hostAddress= getHostAddress(); // 获取服务器地址 
+        foreach ($re as $k=>$v){
+            $re[$k]['logo']=$hostAddress.__ROOT__.$v['logo'];
+        }
+
         /*返回数据*/
-        if(is_empty($re)){
+        if(empty($re)){
             $return['status']=-1;
 			$return['msg']='暂无数据!';
 			$return['code']='10003';
@@ -74,7 +79,12 @@ class CarQuotationController extends CommonController {
         $map['brand']=I('post.brand');
         $field='id,brand,picture,model,battery_life,battery_capacity,engine,structure,quotation';
         $re=$this->tblQuotation->selData($map,$limit,$field);
-
+        
+        $hostAddress= getHostAddress(); // 获取服务器地址
+        foreach ($re as $k=>$v){
+            $re[$k]['picture']=$hostAddress.__ROOT__.$v['picture'];
+        }
+        
         /*返回数据*/
         if(empty($re)){
             $return['status']=-1;

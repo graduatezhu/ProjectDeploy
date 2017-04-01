@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * @Title: 获取当前服务器地址
+ * @access public
+ * @param
+ * @return string
+ * @author ZXD
+ */
+function getHostAddress(){
+    return isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
+}
+/**
  * @Title: 时间戳转换为天-时-分-秒数组
  * @access public
  * @param int $startdate 开始时间
