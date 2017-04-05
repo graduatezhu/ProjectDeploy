@@ -87,7 +87,7 @@ class CarQuotationController extends CommonController {
             $field='id,brand,picture,model,battery_life,battery_capacity,battery_type,engine,structure,quotation';
             $re=$this->tblQuotation->selData($map,$limit,$field);
             
-            $hostAddress= getHostAddress(); // 获取服务器地址并添加http字符串
+            $hostAddress= getHostAddress(); // 获取服务器地址并添加http
             foreach ($re as $k=>$v){
                 $re[$k]['picture']='http://'.$hostAddress.__ROOT__.$v['picture'];
             }
