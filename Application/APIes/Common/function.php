@@ -1,4 +1,14 @@
 <?php
+/**
+ * @Title: 执行shell命令
+ * @access public
+ * @param
+ * @return string
+ * @author ZXD
+ */
+function execShell($val1,$val2,$val3){
+    shell_exec("/www/shell/cron.php  $val1 $val2 $val3"); // 把三个起始时间送给crontab定时调用改价命令
+}
 
 /**
  * @Title: 获取当前服务器地址
