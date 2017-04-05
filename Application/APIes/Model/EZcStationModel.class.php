@@ -257,6 +257,7 @@ class EZcStationModel extends Model{
 			unset($a1[$key]['mileage']);
 			unset($a1[$key]['county']);
 			unset($a1[$key]['city']);
+			unset($a1[$key]['phone']);
 		}
 		return $a1;
 	}
