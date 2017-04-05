@@ -42,7 +42,7 @@ class CarQuotationController extends CommonController {
         $field='id,logo,brand';
         $re=$this->tblQuotation->selData(1,$limit,$field); //where为1默认为全部
         
-        $hostAddress= getHostAddress(); // 获取服务器地址 
+        $hostAddress= getHostAddress(); // 获取服务器地址并添加http
         foreach ($re as $k=>$v){
             $re[$k]['logo']='http://'.$hostAddress.__ROOT__.$v['logo'];
         }
