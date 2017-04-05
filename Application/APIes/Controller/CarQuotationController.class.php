@@ -44,7 +44,7 @@ class CarQuotationController extends CommonController {
         
         $hostAddress= getHostAddress(); // 获取服务器地址 
         foreach ($re as $k=>$v){
-            $re[$k]['logo']=$hostAddress.__ROOT__.$v['logo'];
+            $re[$k]['logo']='http://'.$hostAddress.__ROOT__.$v['logo'];
         }
 
         /*返回数据*/
@@ -87,7 +87,7 @@ class CarQuotationController extends CommonController {
             $field='id,brand,picture,model,battery_life,battery_capacity,battery_type,engine,structure,quotation';
             $re=$this->tblQuotation->selData($map,$limit,$field);
             
-            $hostAddress= getHostAddress(); // 获取服务器地址并添加http字符串
+            $hostAddress= getHostAddress(); // 获取服务器地址并添加http
             foreach ($re as $k=>$v){
                 $re[$k]['picture']='http://'.$hostAddress.__ROOT__.$v['picture'];
             }
