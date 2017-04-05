@@ -194,9 +194,9 @@ class EZcStationModel extends Model{
 			$a2=$this->pubsell($field1,$join,$map,'');
 	        //某站空闲车辆
 			if($a2!=0){
-				$a1[$k]['freecar']=1;
+				$a1[$k]['isfree']=1;
 			}else{
-				$a1[$k]['freecar']=2;
+				$a1[$k]['isfree']=2;
 			}
 			//获取mileage；
 			$field2='e_zc_cars.id,e_zc_cars.occupation,e_zc_cars.sn';
