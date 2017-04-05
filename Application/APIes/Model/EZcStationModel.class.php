@@ -250,9 +250,9 @@ class EZcStationModel extends Model{
 		//print_r($a1);
 		foreach ($a1 as $key => $val) {
 			if ($val['mileage']<$batterylife) {
-				$a1[$k]['freecar']=2;
+				$a1[$k]['isfree']=2;
 			}else{
-				$a1[$k]['freecar']=1;
+				$a1[$k]['isfree']=1;
 			}
 			unset($a1[$key]['mileage']);
 			unset($a1[$key]['county']);
