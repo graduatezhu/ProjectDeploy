@@ -95,7 +95,7 @@ class EZcStationModel extends Model{
 	}
 	//租车地图显示
 	public function rentmaps(){
-		$field='id,lat,lng';
+		$field='id,name,lat,lng';
 		$zhan=$this->pubsel($field,'','','');
 		foreach ($zhan as $k => $v) {
 			$field='occupation';
@@ -245,7 +245,7 @@ class EZcStationModel extends Model{
             }
             $a1[$k]['mileage']=max($mileage);
 			//unset($a1[$k]['id']);
-			unset($a1[$k]['name']);
+			//unset($a1[$k]['name']);
 		}
 		//print_r($a1);
 		foreach ($a1 as $key => $val) {
@@ -255,6 +255,8 @@ class EZcStationModel extends Model{
 				$a1[$k]['freecar']=1;
 			}
 			unset($a1[$key]['mileage']);
+			unset($a1[$key]['county']);
+			unset($a1[$key]['city']);
 		}
 		return $a1;
 	}
