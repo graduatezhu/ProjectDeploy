@@ -107,6 +107,7 @@ function verifiy_code($frame){
  * @author ZXD
  */
 function send_frame($commandArray){
+    set_time_limit(60*2);
     // 身份验证帧
     $authStr = '85 00 06 0F 8C 7E';
     $authStrArray = str_split(str_replace(' ', '', $authStr), 2);  // 将16进制数据转换成两个一组的数组
@@ -114,7 +115,7 @@ function send_frame($commandArray){
     $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // 创建Socket
 
     $authFrame='';
-    if (socket_connect($socket, "121.42.53.24", 8234)) {  //连接
+    if (socket_connect($socket, "192.168.1.100", 8234)) {  //连接
         for ($i = 0; $i < count($authStrArray); $i++) {
             $authFrame.=chr(hexdec($authStrArray[$i])); // 组中为一帧数据一次性发送
         }
@@ -360,7 +361,7 @@ function reset_pile($QRcode){
      
     // 发送
     $receiveFrame=send_frame($frameArray);
-return $receiveFrame;
+// return $receiveFrame;
 
     /*正常返回命令应答帧*/
     if($receiveFrame['status']=='0'){
@@ -470,8 +471,8 @@ function lock_pile($QRcode, $gun, $type) {
 // $cmdRTNArray=lock_pile('000860011001014001001','1','0');
 //$cmdRTNArray=reset_pile('000860011001014001001');
 // $cmdRTNArray=switch_pile('000860011001014001010','1','1','101');
-// $cmdRTNArray=modify_pile_price('000860011001014001001','1.2');
-//print_r($cmdRTNArray);
+$cmdRTNArray=modify_pile_price('000860011001014001003','2.2');
+print_r($cmdRTNArray);
 
 
 //图片url路径 变成 数据库路径
