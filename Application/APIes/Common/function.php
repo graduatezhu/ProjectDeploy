@@ -471,8 +471,8 @@ function lock_pile($QRcode, $gun, $type) {
 // $cmdRTNArray=lock_pile('000860011001014001001','1','0');
 //$cmdRTNArray=reset_pile('000860011001014001001');
 // $cmdRTNArray=switch_pile('000860011001014001010','1','1','101');
-$cmdRTNArray=modify_pile_price('000860011001014001003','2.2');
-print_r($cmdRTNArray);
+//$cmdRTNArray=modify_pile_price('000860011001014001003','2.2');
+//print_r($cmdRTNArray);
 
 
 //图片url路径 变成 数据库路径

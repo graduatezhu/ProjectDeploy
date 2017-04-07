@@ -187,4 +187,27 @@ class ZstationController extends \Think\Controller {
 		//print_r($return);die;
 		echo jsonStr($return);exit;
 	}
+	//附近热点城市
+	public function zhotcity(){
+		$return['success']=true;
+		if (IS_POST) {
+			//$token=trim(I('post.token')==''?'':I('post.token','','strip_tags'));
+			$mo=D('EZcHotcity')->field('city_id,city_name')->select();
+			if ($mo) {
+				$return['status']=0;
+				$return['msg']='查询成功!';
+				$return['info']=$mo;
+			}else{
+				$return['status']=-1;
+				$return['msg']='暂无数据!';
+				$return['code']='10003';
+			}
+		}else{
+			$return['status']=-1;
+			$return['msg']='request fail!';
+			$return['code']='10004';
+		}
+		//print_r($return);die;
+		echo jsonStr($return);exit;
+	}
 }

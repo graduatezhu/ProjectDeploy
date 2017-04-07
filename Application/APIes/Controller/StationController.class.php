@@ -25,7 +25,7 @@ class StationController extends CommonController {
 		
 		// 查询站点信息
 		$res = $station->table ( "e_zc_station station" )->field ( "station.name,station.address,station.phone,station.comment,station.lng,station.lat" )->where ( "id={$station_id}" )->find ();
-		
+		//print_r($res);die;
 		// 若有结果集 再查站点的车辆
 		if ($res) {
 			$res1 = $station->table ( "e_zc_cars car,e_zc_cars_model model,e_zc_cars_brand brand" )->field ( "model.img_url,car.plate,car.id car_id,car.capacity,car.occupation,model.name model,brand.name brand,car.sn,car.code" )->where ( "car.station_id={$station_id} and car.model_id=model.id and car.brand_id=brand.id" )->select ();
@@ -71,7 +71,7 @@ class StationController extends CommonController {
 				$res ["discount"] = $discount;
 				$res ['car_info'] = $res1;
 				$res ['infocount'] = count ( $res1 );
-
+print_r($res);die;
 				/* 返回json串 */
 				$res = json_encode ( $res, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 				echo $res;
