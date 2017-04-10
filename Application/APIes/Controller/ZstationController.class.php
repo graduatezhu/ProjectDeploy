@@ -192,7 +192,7 @@ class ZstationController extends \Think\Controller {
 		$return['success']=true;
 		if (IS_POST) {
 			//$token=trim(I('post.token')==''?'':I('post.token','','strip_tags'));
-			$mom=D('EZcHotcity')->field('city')->select();
+			$mo=D('EZcHotcity')->field('city')->select();
 			if ($mo) {
 				$return['status']=0;
 				$return['msg']='查询成功!';
