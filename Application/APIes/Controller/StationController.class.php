@@ -71,7 +71,6 @@ class StationController extends CommonController {
 				$res ["discount"] = $discount;
 				$res ['car_info'] = $res1;
 				$res ['infocount'] = count ( $res1 );
-print_r($res);die;
 				/* 返回json串 */
 				$res = json_encode ( $res, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 				echo $res;
