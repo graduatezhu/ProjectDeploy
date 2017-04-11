@@ -20,7 +20,24 @@ function getOpenID()
     }
     return $str;
 }
+function get_micro_time($length=3,$type='string'){
+  $temp = explode(" ", microtime());
+  // echo $temp[0],'<br>';//毫秒小数位 0.960877001445485906
+  // echo $temp[1],'<br>';//秒，和时间戳一样 1445485906
 
+  if( $type == 'string' ){
+    $re2 = round( $temp[0]*pow(10,$length) );//四舍五入
+    // echo $temp[1],'<br>';
+    // echo $re2,'<br>';
+    // echo $re2,'<br>';
+    settype($re2,$type);
+    settype($temp[1],$type);
+    return $temp[1].$re2;
+  }else{
+    $re = bcadd($temp[0], $temp[1], $length);//二者相加、保留 $length 位小数
+    return $re*pow(10,$length);//6位竟然返回1.4454856885957E+15
+  }
+}
 
 /**
  *  @desc 根据两点间的经纬度计算距离
