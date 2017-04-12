@@ -8,7 +8,7 @@ class UploadimgController extends CommonController {
 
     //用户身份验证图片上传接口
     public function upload(){
-    	//首先接收传来的信息
+    	//首先接收传来的信息1
        	@$id=isset($_POST['userID'])?trim($_POST['userID']):false;
         @$idcard_a=isset($_POST['IDcard_a'])?$_POST['IDcard_a']:false;
        	@$idcard_b=isset($_POST['IDcard_b'])?$_POST['IDcard_b']:false;

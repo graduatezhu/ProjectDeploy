@@ -28,14 +28,14 @@ function logger($log_content) {
 }
 
 logger($xml);
-if(substr($result['out_trade_no'],0,3)=='EZC'){
+/*if(substr($result['out_trade_no'],0,3)=='EZC'){
 	file_get_contents("http://192.168.1.100/newapp/APIes/Wxpay/savejs?out_trade_no={$result['out_trade_no']}&result_code={$result['result_code']}");
 }else{
 	file_get_contents("http://192.168.1.100/newapp/APIes/Wxpay/save?out_trade_no={$result['out_trade_no']}&result_code={$result['result_code']}");
-}
-/*if(substr($result['out_trade_no'],0,3)=='EZC'){
+}*/
+if(substr($result['out_trade_no'],0,3)=='EZC'){
 	file_get_contents("http://121.42.53.24/zuche/APIes/Wxpay/savejs?out_trade_no={$result['out_trade_no']}&result_code={$result['result_code']}");
 }else{
 	file_get_contents("http://121.42.53.24/zuche/APIes/Wxpay/save?out_trade_no={$result['out_trade_no']}&result_code={$result['result_code']}");
-}*/
+}
 	
