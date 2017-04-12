@@ -28,8 +28,8 @@ class WxpayController extends CommonController {
 		$aa->SetTrade_type('APP');
 
 		//接收微信支付异步通知回调地址，通知url必须为直接可访问的url，不能携带参数。
-		$aa->SetNotify_url('http://121.42.53.24/zuche/WXpay/callback.php');
-		
+		//$aa->SetNotify_url('http://121.42.53.24/zuche/WXpay/callback.php');
+		$aa->SetNotify_url('http://192.168.1.100/newapp/WXpay/callback.php');
 		
 		//微信支付类在跟命名空间定义 所以要加上\
 		$res=\WxPayApi::unifiedOrder($aa);

@@ -53,14 +53,15 @@ if($verify_result) {//验证成功
 	if($_SERVER['SERVER_ADDR'] === '127.0.0.1'){//本地环境
 		$baseUrl = 'http://local.zuche.com/';
 	}else{//服务器环境
-		$baseUrl = 'http://121.42.53.24/';
+		//$baseUrl = 'http://121.42.53.24/';
+		$baseUrl = 'http://192.168.1.100/';
 	}
 	
 	substr($out_trade_no,0,3)=='EZC'?$flag=1:$flag=0;
 	if($flag){//结算
-		file_get_contents($baseUrl.'zuche/index.php/APIes/AliBalance/pay?out_trade_no='.$out_trade_no.'&trade_no='.$trade_no.'&trade_status='.$trade_status);
+		file_get_contents($baseUrl.'newapp/index.php/APIes/AliBalance/pay?out_trade_no='.$out_trade_no.'&trade_no='.$trade_no.'&trade_status='.$trade_status);
 	}else{//保障金
-		file_get_contents($baseUrl.'zuche/index.php/APIes/AliPay/pay?out_trade_no='.$out_trade_no.'&trade_no='.$trade_no.'&trade_status='.$trade_status);
+		file_get_contents($baseUrl.'newapp/index.php/APIes/AliPay/pay?out_trade_no='.$out_trade_no.'&trade_no='.$trade_no.'&trade_status='.$trade_status);
 	}
 
     if($_POST['trade_status'] == 'TRADE_FINISHED') {
