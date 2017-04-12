@@ -50,7 +50,7 @@ if($verify_result) {//验证成功
 	$trade_status = $_POST['trade_status'];
 	
 	//将 支付宝 传值，转发给 TP框架接口
-	if($_SERVER['SERVER_ADDR'] === '127.0.0.1'){//本地环境
+	if($_SERVER['REMOTE_ADDR'] === '127.0.0.1'){//本地环境
 		$baseUrl = 'http://local.zuche.com/';
 	}else{//服务器环境
 		//$baseUrl = 'http://121.42.53.24/';
