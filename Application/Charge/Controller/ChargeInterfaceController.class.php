@@ -613,8 +613,6 @@ class ChargeInterfaceController extends CommonController{
      */
 
     public function deleteChargeCollection(){
-        $_POST['userid']=1;
-        $_POST['id']='5';
 
         if(isset($_POST['userid']) && isset($_POST['id'])){
 
